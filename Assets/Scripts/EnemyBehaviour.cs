@@ -165,48 +165,6 @@ public class EnemyBehaviour : MonoBehaviour
         action = newAction;
     }
 
-    void Patrol()
-    {
-        if (!actionStarted)
-        {
-            NavMeshHit hit;
-            bool isValid = NavMesh.SamplePosition((Random.insideUnitSphere * randPointRange) + randPointOrigin.position, out hit, 100.0f, NavMesh.AllAreas);
-            if (isValid)
-            {
-                destination = hit.position;
-            }
-            targetSpeed = walkSpeed;
-            actionStarted = true;
-            randomWaitTime = Random.Range(minWaitingTime, maxWaitingTime);
-        }
-        if (hasArrived)
-        {
-            targetSpeed = 0;
-            NavMeshHit hit;
-            bool isValid = NavMesh.SamplePosition((Random.insideUnitSphere * randPointRange) + randPointOrigin.position, out hit, 100.0f, NavMesh.AllAreas);
-            if (isValid)
-            {
-                destination = hit.position;
-            }
-
-            if (waitTimer < randomWaitTime)
-            {
-                waitTimer += Time.deltaTime;
-                return;
-            }
-
-            waitTimer = 0;
-            actionStarted = false;
-            hasArrived = false;
-        }
-        else
-        {
-            CalculatePath();
-        }
-
-        hasArrived = path.corners.Length >= 2 && Vector3.Distance(transform.position, destination) < stoppingThreshold;
-
-    }
     void Chase()
     {
         if (!actionStarted)

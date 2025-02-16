@@ -16,7 +16,12 @@ public class HealthSystem : MonoBehaviour
         if (currentHealth <= 0)
         {
             Debug.Log("Is Dead");
+            Die();
             Destroy(gameObject);
         }
+    }
+    public void Die()
+    {
+        GameManager.instance.EnemyKilled();
     }
 }
