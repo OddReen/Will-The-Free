@@ -1,8 +1,9 @@
-using System.Collections;
 using UnityEngine;
 
 public class ShootingSystem : MonoBehaviour
 {
+    public AudioClip[] shootingSounds;
+
     [SerializeField] GameObject bulletPref;
     [SerializeField] Transform barrelEnd;
 
@@ -44,7 +45,8 @@ public class ShootingSystem : MonoBehaviour
     void Shoot()
     {
         animator.SetTrigger("Shoot");
-        Quaternion bulletRotation = Quaternion.LookRotation(barrelEnd.right,barrelEnd.forward);
+        SoundFXManager.instance.PlayerRandomSoundFXClip(shootingSounds, transform, 1, false);
+        Quaternion bulletRotation = Quaternion.LookRotation(barrelEnd.right, barrelEnd.forward);
         GameObject NewBullet = Instantiate(bulletPref, barrelEnd.position, bulletRotation);
         NewBullet.GetComponent<BulletHandler>().damage = damage;
         NewBullet.GetComponent<Rigidbody>().linearVelocity = bulletDir * bulletSpeed;

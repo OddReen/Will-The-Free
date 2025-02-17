@@ -20,6 +20,8 @@ public class MovementHandler : MonoBehaviour
 
     Rigidbody rb;
 
+    [SerializeField] Animator animator;
+
     [Header("Ground Check")]
     public LayerMask whatIsGround;
     [SerializeField] bool grounded;
@@ -65,13 +67,15 @@ public class MovementHandler : MonoBehaviour
     {
         Vector3 flatVel = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
 
+        animator.SetFloat("Move", flatVel.magnitude / moveSpeed);
+
         if (flatVel.magnitude > moveSpeed)
         {
             Vector3 limitedVel = flatVel.normalized * moveSpeed;
             rb.linearVelocity = new Vector3(limitedVel.x, rb.linearVelocity.y, limitedVel.z);
         }
     }
-    
+
 
     private void Jump()
     {

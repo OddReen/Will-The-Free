@@ -1,8 +1,11 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
 public class EnemyBehaviour : MonoBehaviour
 {
+    [SerializeField] AudioClip[] sounds;
+
     public Action action;
 
     public enum Action
@@ -64,7 +67,19 @@ public class EnemyBehaviour : MonoBehaviour
         animator = GetComponentInChildren<Animator>();
         path = new NavMeshPath();
         hasArrived = false;
+
+        StartCoroutine(Sounds());
     }
+    IEnumerator Sounds()
+    {
+        while (true)
+        {
+            float rand = Random.Range(0, 15);
+            yield return new WaitForSeconds(rand);
+            SoundFXManager.instance.PlayerRandomSoundFXClip(sounds, transform, 1, true);
+        }
+    }
+
     private void Update()
     {
         targetSpeed = NPCTargetSpeed();

@@ -9,7 +9,6 @@ public class GameManager : MonoBehaviour
 
     public GameObject player;
 
-
     [Header("Points")]
     [SerializeField] int points;
     [SerializeField] TextMeshProUGUI pointsToScreen;
