@@ -1,7 +1,10 @@
+using Unity.Netcode;
 using UnityEngine;
 
-public class MovementHandler : MonoBehaviour
+public class MovementHandler : NetworkBehaviour
 {
+    [SerializeField] InputHandler inputHandler;
+
     [Header("Movement")]
     public float moveSpeed;
     public float groundDrag;
@@ -26,15 +29,25 @@ public class MovementHandler : MonoBehaviour
     public LayerMask whatIsGround;
     [SerializeField] bool grounded;
 
-    private void Start()
+    public override void OnNetworkSpawn()
     {
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
 
-        InputHandler.inputHandler.OnJump += Jump;
+        inputHandler.OnJump += Jump;
+        if (!IsOwner)
+        {
+
+        }
     }
+
     private void Update()
     {
+        if (!IsOwner)
+        {
+            return;
+        }
+
         grounded = Physics.Raycast(transform.position + Vector3.up, Vector3.down, 1.1f, whatIsGround);
 
         Input();
@@ -47,12 +60,16 @@ public class MovementHandler : MonoBehaviour
     }
     private void FixedUpdate()
     {
+        if (!IsOwner)
+        {
+            return;
+        }
         MovePlayer();
     }
     private void Input()
     {
-        horizontalInput = InputHandler.inputHandler.moveInputValue.x;
-        verticalInput = InputHandler.inputHandler.moveInputValue.y;
+        horizontalInput = inputHandler.moveInputValue.x;
+        verticalInput = inputHandler.moveInputValue.y;
     }
     private void MovePlayer()
     {

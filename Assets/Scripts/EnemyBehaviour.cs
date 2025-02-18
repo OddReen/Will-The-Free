@@ -4,7 +4,7 @@ using UnityEngine.AI;
 
 public class EnemyBehaviour : MonoBehaviour
 {
-    [SerializeField] AudioClip[] sounds;
+    [SerializeField] AudioClip[] moans;
 
     public Action action;
 
@@ -76,7 +76,7 @@ public class EnemyBehaviour : MonoBehaviour
         {
             float rand = Random.Range(0, 15);
             yield return new WaitForSeconds(rand);
-            SoundFXManager.instance.PlayerRandomSoundFXClip(sounds, transform, 1, true);
+            SoundFXManager.instance.PlayerRandomSoundFXClip(moans, transform, 1, true);
         }
     }
 

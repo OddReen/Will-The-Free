@@ -1,7 +1,13 @@
+using Unity.Cinemachine;
+using Unity.Netcode;
 using UnityEngine;
 
-public class CameraHandler : MonoBehaviour
+public class CameraHandler : NetworkBehaviour
 {
+    [SerializeField] InputHandler inputHandler;
+
+    [SerializeField] CinemachineCamera cinemachineCamera;
+
     [SerializeField, Range(0, 100)]
     public float sensibility = 25;
 
@@ -10,19 +16,31 @@ public class CameraHandler : MonoBehaviour
     float Pitch;
     float Yaw;
 
-    private void Start()
+    public override void OnNetworkSpawn()
     {
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        if (!IsOwner)
+        {
+            cinemachineCamera.gameObject.SetActive(false);
+        }
+        else
+        {
+            cinemachineCamera.transform.SetParent(null, false);
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
     }
     private void Update()
     {
+        if (!IsOwner)
+        {
+            return;
+        }
         Rotation();
     }
     void Rotation()
     {
-        float moveX = InputHandler.inputHandler.lookInputValue.x * Time.deltaTime * sensibility;
-        float moveY = InputHandler.inputHandler.lookInputValue.y * Time.deltaTime * sensibility;
+        float moveX = inputHandler.lookInputValue.x * Time.deltaTime * sensibility;
+        float moveY = inputHandler.lookInputValue.y * Time.deltaTime * sensibility;
 
         Yaw += moveX;
 

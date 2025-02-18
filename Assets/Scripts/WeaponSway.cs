@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class WeaponSway : MonoBehaviour
 {
+    [SerializeField] InputHandler inputHandler;
+
     [Header("Sway Settings")]
     [SerializeField] private float smooth = 5f;
     [SerializeField] private float multiplier = 1f;
@@ -11,8 +13,8 @@ public class WeaponSway : MonoBehaviour
     private void LateUpdate()
     {
         // Get mouse input
-        float mouseX = InputHandler.inputHandler.lookInputValue.x * multiplier;
-        float mouseY = InputHandler.inputHandler.lookInputValue.y * multiplier;
+        float mouseX = inputHandler.lookInputValue.x * multiplier;
+        float mouseY = inputHandler.lookInputValue.y * multiplier;
 
         // Calculate target rotation
         Quaternion rotationX = Quaternion.AngleAxis(-mouseY, Vector3.right);

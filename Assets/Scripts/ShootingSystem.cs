@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class ShootingSystem : MonoBehaviour
 {
+    [SerializeField] InputHandler inputHandler;
+
     public AudioClip[] shootingSounds;
 
     [SerializeField] GameObject bulletPref;
@@ -19,10 +21,10 @@ public class ShootingSystem : MonoBehaviour
 
     private void Start()
     {
-        InputHandler.inputHandler.OnShoot += Shoot;
+        inputHandler.OnShoot += Shoot;
 
-        InputHandler.inputHandler.OnAim += Aim;
-        InputHandler.inputHandler.OnStopAim += StopAim;
+        inputHandler.OnAim += Aim;
+        inputHandler.OnStopAim += StopAim;
     }
     private void Update()
     {

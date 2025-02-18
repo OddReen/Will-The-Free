@@ -1,11 +1,10 @@
 using System;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class InputHandler : MonoBehaviour
+public class InputHandler : NetworkBehaviour
 {
-    public static InputHandler inputHandler;
-
     InputSystem_Actions action;
 
     public Vector2 moveInputValue;
@@ -15,13 +14,27 @@ public class InputHandler : MonoBehaviour
     public Action OnAim;
     public Action OnStopAim;
 
-    void Awake()
+    public override void OnNetworkSpawn()
     {
+        if (!IsOwner) return;
         action = new InputSystem_Actions();
-        if (inputHandler == null)
-        {
-            inputHandler = this;
-        }
+
+        action.Enable();
+
+        action.Player.Move.performed += Move_performed;
+        action.Player.Move.canceled += Move_canceled;
+
+        action.Player.Look.performed += Look_performed;
+        action.Player.Look.canceled += Look_canceled;
+
+        action.Player.Jump.performed += Jump_performed;
+        action.Player.Jump.canceled += Jump_canceled;
+
+        action.Player.Shoot.performed += Shoot_performed;
+        action.Player.Shoot.canceled += Shoot_canceled;
+
+        action.Player.Aim.performed += Aim_performed;
+        action.Player.Aim.canceled += Aim_canceled;
     }
     private void Look_performed(InputAction.CallbackContext context)
     {
@@ -63,27 +76,9 @@ public class InputHandler : MonoBehaviour
         OnStopAim?.Invoke();
     }
 
-    private void OnEnable()
+    public override void OnDestroy()
     {
-        action.Enable();
-
-        action.Player.Move.performed += Move_performed;
-        action.Player.Move.canceled += Move_canceled;
-
-        action.Player.Look.performed += Look_performed;
-        action.Player.Look.canceled += Look_canceled;
-
-        action.Player.Jump.performed += Jump_performed;
-        action.Player.Jump.canceled += Jump_canceled;
-
-        action.Player.Shoot.performed += Shoot_performed;
-        action.Player.Shoot.canceled += Shoot_canceled;
-
-        action.Player.Aim.performed += Aim_performed;
-        action.Player.Aim.canceled += Aim_canceled;
-    }
-    private void OnDisable()
-    {
+        if (!IsOwner) return;
         action.Disable();
 
         action.Player.Move.performed -= Move_performed;
