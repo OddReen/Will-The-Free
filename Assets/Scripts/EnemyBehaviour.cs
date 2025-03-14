@@ -1,9 +1,12 @@
 using System.Collections;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class EnemyBehaviour : MonoBehaviour
+public class EnemyBehaviour : NetworkBehaviour
 {
+    public GameObject closestPlayer;
+
     [SerializeField] AudioClip[] moans;
 
     public Action action;
@@ -62,7 +65,7 @@ public class EnemyBehaviour : MonoBehaviour
 
     bool actionStarted = false;
 
-    private void Start()
+    public override void OnNetworkSpawn()
     {
         animator = GetComponentInChildren<Animator>();
         path = new NavMeshPath();
@@ -76,10 +79,9 @@ public class EnemyBehaviour : MonoBehaviour
         {
             float rand = Random.Range(0, 15);
             yield return new WaitForSeconds(rand);
-            SoundFXManager.instance.PlayerRandomSoundFXClip(moans, transform, 1, true);
+            //SoundFXManager.instance.PlayerRandomSoundFXClip(moans, transform, 1, true);
         }
     }
-
     private void Update()
     {
         targetSpeed = NPCTargetSpeed();
@@ -88,7 +90,7 @@ public class EnemyBehaviour : MonoBehaviour
         {
             case Action.Chase:
                 movementState = MovementState.Walk;
-                Chase();
+                ChaseNearestPlayer();
                 break;
             case Action.Idle:
                 break;
@@ -101,7 +103,6 @@ public class EnemyBehaviour : MonoBehaviour
 
         Animation();
     }
-
     float NPCTargetSpeed()
     {
         if (movementState == MovementState.Run)
@@ -179,17 +180,21 @@ public class EnemyBehaviour : MonoBehaviour
         actionStarted = false;
         action = newAction;
     }
-
-    void Chase()
+    void ChaseNearestPlayer()
     {
         if (!actionStarted)
         {
             targetSpeed = runSpeed;
             actionStarted = true;
         }
+        if (NetworkManager.Singleton.ConnectedClientsList.Count == 0)
+        {
+            return;
+        }
+        GameObject playerTarget = NetworkManager.Singleton.ConnectedClientsList[0].PlayerObject.gameObject;
 
         NavMeshHit hit;
-        bool isValid = NavMesh.SamplePosition(GameManager.instance.player.transform.position, out hit, 100.0f, NavMesh.AllAreas);
+        bool isValid = NavMesh.SamplePosition(playerTarget.transform.position, out hit, 100.0f, NavMesh.AllAreas);
         if (isValid)
         {
             destination = hit.position;

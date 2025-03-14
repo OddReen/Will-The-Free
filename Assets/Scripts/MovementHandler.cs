@@ -31,14 +31,14 @@ public class MovementHandler : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
+        if (!IsOwner)
+        {
+            return;
+        }
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
 
         inputHandler.OnJump += Jump;
-        if (!IsOwner)
-        {
-
-        }
     }
 
     private void Update()

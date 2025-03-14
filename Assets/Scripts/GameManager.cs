@@ -1,13 +1,25 @@
-using System;
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
+using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
-    public GameObject player;
+    public GameObject[] players;
+
+    enum GameState
+    {
+        MainMenu,
+        Wave,
+        Rest
+    }
+
+    [SerializeField] GameState gameState = GameState.MainMenu;
 
     [Header("Points")]
     [SerializeField] int points;
@@ -21,41 +33,61 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject enemyPref;
     [SerializeField] Transform[] spawns;
 
-    private void Awake()
+    private void Start()
     {
         instance = this;
-        StartCoroutine(WaveSpawn());
-        waveNumber = 1;
-        maxEnemies = 5;
+        if (!NetworkManager.Singleton.IsServer)
+        {
+            return;
+        }
+        Debug.Log("eyo");
+        StartWave();
+    }
+    public void EnemyKilled()
+    {
+        PointsChange(100);
+        if (NetworkManager.Singleton.IsClient)
+        {
+            return;
+        }
+        currentEnemies--;
+        if (currentEnemies <= 0)
+        {
+            StartRest();
+        }
     }
     public void PointsChange(int amount)
     {
         points += amount;
         pointsToScreen.text = points.ToString();
     }
-    public void EnemyKilled() 
+
+    private void StartRest()
     {
-        currentEnemies--;
-        PointsChange(100);
-        if (currentEnemies <= 0)
-        {
-            NextWave();
-        }
+        StartCoroutine(Rest());
     }
-    void NextWave()
+    IEnumerator Rest()
+    {
+        yield return new WaitForSeconds(1f);
+        StartWave();
+    }
+    void StartWave()
     {
         waveNumber++;
         wavesToScreen.text = waveNumber.ToString();
-        StartCoroutine(WaveSpawn());
+        Debug.Log("eyo");
+        StartCoroutine(Wave());
     }
-    IEnumerator WaveSpawn()
+    IEnumerator Wave()
     {
         maxEnemies += 5;
+        currentEnemies = maxEnemies;
         for (int i = 0; i < maxEnemies; i++)
         {
-            currentEnemies++;
+            Debug.Log(i);
             int RandomSpawn = UnityEngine.Random.Range(0, spawns.Length);
-            Instantiate(enemyPref, spawns[RandomSpawn].position, Quaternion.identity);
+            GameObject NewEnemy = Instantiate(enemyPref, spawns[RandomSpawn].position, Quaternion.identity);
+            NewEnemy.GetComponent<NetworkObject>().Spawn();
             yield return new WaitForSeconds(0.5f);
         }
     }

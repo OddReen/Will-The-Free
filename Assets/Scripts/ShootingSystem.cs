@@ -47,7 +47,7 @@ public class ShootingSystem : MonoBehaviour
     void Shoot()
     {
         animator.SetTrigger("Shoot");
-        SoundFXManager.instance.PlayerRandomSoundFXClip(shootingSounds, transform, 1, false);
+        //SoundFXManager.instance.PlayerRandomSoundFXClip(shootingSounds, transform, 1, false);
         Quaternion bulletRotation = Quaternion.LookRotation(barrelEnd.right, barrelEnd.forward);
         GameObject NewBullet = Instantiate(bulletPref, barrelEnd.position, bulletRotation);
         NewBullet.GetComponent<BulletHandler>().damage = damage;

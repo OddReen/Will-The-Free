@@ -4,6 +4,8 @@ using UnityEngine.UI;
 
 public class ConnectUiScript : MonoBehaviour
 {
+    [SerializeField] GameObject gameManager;
+
     [SerializeField] private Button hostButton;
     [SerializeField] private Button clientButton;
 
@@ -18,6 +20,7 @@ public class ConnectUiScript : MonoBehaviour
     private void HostButtonOnClick()
     {
         NetworkManager.Singleton.StartHost();
+        gameManager.SetActive(true);
         networkMenu.SetActive(false);
     }
     private void ClientButtonOnClick()

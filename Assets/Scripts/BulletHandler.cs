@@ -26,10 +26,6 @@ public class BulletHandler : MonoBehaviour
                 {
                     hitHealthSystem.TakeDamage(damage);
                 }
-                else
-                {
-                    Debug.Log(hit.collider.gameObject.name);
-                }
                 DestroyBullet();
             }
         }

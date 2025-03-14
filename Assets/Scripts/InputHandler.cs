@@ -13,6 +13,7 @@ public class InputHandler : NetworkBehaviour
     public Action OnShoot;
     public Action OnAim;
     public Action OnStopAim;
+    public Action OnInteract;
 
     public override void OnNetworkSpawn()
     {
@@ -35,7 +36,20 @@ public class InputHandler : NetworkBehaviour
 
         action.Player.Aim.performed += Aim_performed;
         action.Player.Aim.canceled += Aim_canceled;
+
+        action.Player.Interact.performed += Interact_performed;
+        action.Player.Interact.canceled += Interact_canceled;
     }
+
+    private void Interact_canceled(InputAction.CallbackContext context)
+    {
+
+    }
+    private void Interact_performed(InputAction.CallbackContext context)
+    {
+        OnInteract?.Invoke();
+    }
+
     private void Look_performed(InputAction.CallbackContext context)
     {
         lookInputValue = context.ReadValue<Vector2>();
