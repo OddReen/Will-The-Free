@@ -10,6 +10,7 @@ public class BulletHandler : MonoBehaviour
         lastPosition = transform.position;
         Invoke(nameof(DestroyBullet), 3);
     }
+
     private void Update()
     {
         RaycastHit hit;
@@ -26,6 +27,7 @@ public class BulletHandler : MonoBehaviour
                 {
                     hitHealthSystem.TakeDamage(damage);
                 }
+                Instantiate(ParticleSystemLibrary.instance.bulletHitEffect, hit.point, Quaternion.LookRotation(hit.normal));
                 DestroyBullet();
             }
         }
