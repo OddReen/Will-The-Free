@@ -1,4 +1,4 @@
-**Will The Free** is a first person survival shooter heavly inspired by a Call Of Duty game mode - Call of Duty Zombies by Activision.
+**Will The Free** is a first person survival shooter heavly inspired by a Call Of Duty game mode by Activision - Call of Duty Zombies.
 
 In this project, I want to turn this famous mode into a rogue like, driven by a misterious and uncanny companion that helps you, or not, go against waves of unnerving... monsters.
 
