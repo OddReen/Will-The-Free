@@ -3,6 +3,8 @@
 In this project, I want to turn this famous mode into a rogue like, driven by a misterious and uncanny companion that may, or may not, help you, go against waves of unnerving... monsters.
 
 Main key features:
+  
+<br />
   -NPC Companion
   -Co-op
   -Survive waves of monster hordes
