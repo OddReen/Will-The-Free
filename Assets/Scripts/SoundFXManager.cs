@@ -1,7 +1,6 @@
-using Unity.Netcode;
 using UnityEngine;
 
-public class SoundFXManager : NetworkBehaviour
+public class SoundFXManager : MonoBehaviour
 {
     public static SoundFXManager instance;
 
@@ -42,8 +41,6 @@ public class SoundFXManager : NetworkBehaviour
         PlaySoundFXServerRpc((int)category, rand, spawnTransform.position, volume, attached);
     }
 
-    // The ServerRpc runs on the server (or host) so that only the server spawns NetworkObjects.
-    [ServerRpc]
     private void PlaySoundFXServerRpc(int category, int clipIndex, Vector3 spawnPosition, float volume, bool attached)
     {
         AudioClip clip = null;
@@ -87,8 +84,8 @@ public class SoundFXManager : NetworkBehaviour
         audioSource.Play();
 
         // Spawn the network object so that the spawned sound is replicated to all clients.
-        NetworkObject netObj = audioSource.GetComponent<NetworkObject>();
-        netObj.Spawn();
+        //GameObject netObj = audioSource.GetComponent<NetworkObject>();
+        //netObj.Spawn();
 
         // Destroy the AudioSource after the clip has finished playing.
         Destroy(audioSource.gameObject, clip.length);

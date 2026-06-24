@@ -1,8 +1,7 @@
 using Unity.Cinemachine;
-using Unity.Netcode;
 using UnityEngine;
 
-public class CameraHandler : NetworkBehaviour
+public class CameraHandler : MonoBehaviour
 {
     [SerializeField] InputHandler inputHandler;
 
@@ -16,25 +15,18 @@ public class CameraHandler : NetworkBehaviour
     float Pitch;
     float Yaw;
 
-    public override void OnNetworkSpawn()
+    private void Awake()
     {
-        if (!IsOwner)
-        {
-            cinemachineCamera.gameObject.SetActive(false);
-        }
-        else
-        {
-            cinemachineCamera.transform.SetParent(null, false);
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
-        }
+        OnSpawn();
+    }
+    public void OnSpawn()
+    {
+        cinemachineCamera.transform.SetParent(null, false);
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
     private void Update()
     {
-        if (!IsOwner)
-        {
-            return;
-        }
         Rotation();
     }
     void Rotation()

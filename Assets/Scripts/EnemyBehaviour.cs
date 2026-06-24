@@ -1,9 +1,8 @@
 using System.Collections;
-using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class EnemyBehaviour : NetworkBehaviour
+public class EnemyBehaviour : MonoBehaviour
 {
     public GameObject closestPlayer;
 
@@ -65,7 +64,7 @@ public class EnemyBehaviour : NetworkBehaviour
 
     bool actionStarted = false;
 
-    public override void OnNetworkSpawn()
+    public void OnSpawn()
     {
         animator = GetComponentInChildren<Animator>();
         path = new NavMeshPath();
@@ -82,6 +81,10 @@ public class EnemyBehaviour : NetworkBehaviour
             //SoundFXManager.instance.PlayerRandomSoundFXClip(moans, transform, 1, true);
         }
     }
+    private void Awake()
+    {
+        OnSpawn();
+    }
     private void Update()
     {
         targetSpeed = NPCTargetSpeed();
@@ -90,7 +93,7 @@ public class EnemyBehaviour : NetworkBehaviour
         {
             case Action.Chase:
                 movementState = MovementState.Walk;
-                ChaseNearestPlayer();
+                ChasePlayer();
                 break;
             case Action.Idle:
                 break;
@@ -180,21 +183,23 @@ public class EnemyBehaviour : NetworkBehaviour
         actionStarted = false;
         action = newAction;
     }
-    void ChaseNearestPlayer()
+    void ChasePlayer()
     {
         if (!actionStarted)
         {
             targetSpeed = runSpeed;
             actionStarted = true;
         }
-        if (NetworkManager.Singleton.ConnectedClientsList.Count == 0)
+
+        GameObject target = GameManager.instance.player;
+
+        if (target == null)
         {
             return;
         }
-        GameObject playerTarget = NetworkManager.Singleton.ConnectedClientsList[0].PlayerObject.gameObject;
 
         NavMeshHit hit;
-        bool isValid = NavMesh.SamplePosition(playerTarget.transform.position, out hit, 100.0f, NavMesh.AllAreas);
+        bool isValid = NavMesh.SamplePosition(target.transform.position, out hit, 100.0f, NavMesh.AllAreas);
         if (isValid)
         {
             destination = hit.position;

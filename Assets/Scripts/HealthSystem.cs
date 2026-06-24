@@ -1,12 +1,11 @@
-using Unity.Netcode;
 using UnityEngine;
 
-public class HealthSystem : NetworkBehaviour
+public class HealthSystem : MonoBehaviour
 {
     public float currentHealth;
     public float maxHealth = 100;
     
-    public override void OnNetworkSpawn()
+    public void OnSpawn()
     {
         currentHealth = maxHealth;
     }
@@ -16,14 +15,12 @@ public class HealthSystem : NetworkBehaviour
         Debug.Log(currentHealth);
         if (currentHealth <= 0)
         {
-            Debug.Log("Is Dead");
             Die();
-            OnNetworkDespawn();
             Destroy(gameObject);
         }
     }
     public void Die()
     {
-        GameManager.instance.EnemyKilled();
+        GameManager.instance.OnEnemyDeath();
     }
 }

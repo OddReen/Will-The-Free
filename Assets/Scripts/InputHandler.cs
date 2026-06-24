@@ -1,9 +1,8 @@
 using System;
-using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class InputHandler : NetworkBehaviour
+public class InputHandler : MonoBehaviour
 {
     InputSystem_Actions action;
 
@@ -15,9 +14,12 @@ public class InputHandler : NetworkBehaviour
     public Action OnStopAim;
     public Action OnInteract;
 
-    public override void OnNetworkSpawn()
+    private void Awake()
     {
-        if (!IsOwner) return;
+        OnSpawn();
+    }
+    public void OnSpawn()
+    {
         action = new InputSystem_Actions();
 
         action.Enable();
@@ -90,9 +92,8 @@ public class InputHandler : NetworkBehaviour
         OnStopAim?.Invoke();
     }
 
-    public override void OnDestroy()
+    public void OnDestroy()
     {
-        if (!IsOwner) return;
         action.Disable();
 
         action.Player.Move.performed -= Move_performed;

@@ -114,6 +114,7 @@ PlayerSettings:
   xboxEnableGuest: 0
   xboxEnablePIXSampling: 0
   metalFramebufferOnly: 0
+  metalUseMetalDisplayLink: 0
   xboxOneResolution: 0
   xboxOneSResolution: 0
   xboxOneXResolution: 3
@@ -536,6 +537,9 @@ PlayerSettings:
   - m_BuildTarget: AndroidPlayer
     m_APIs: 150000000b000000
     m_Automatic: 0
+  - m_BuildTarget: WindowsStandaloneSupport
+    m_APIs: 0200000012000000
+    m_Automatic: 0
   m_BuildTargetVRSettings: []
   m_DefaultShaderChunkSizeInMB: 16
   m_DefaultShaderChunkCount: 0
@@ -955,7 +959,7 @@ PlayerSettings:
   qnxGraphicConfPath: 
   apiCompatibilityLevel: 6
   captureStartupLogs: {}
-  activeInputHandler: 2
+  activeInputHandler: 1
   windowsGamepadBackendHint: 0
   cloudProjectId: 2c25cece-f592-40ea-bd98-742a11828d69
   framebufferDepthMemorylessMode: 0

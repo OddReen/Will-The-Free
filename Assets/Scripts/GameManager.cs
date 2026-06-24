@@ -1,16 +1,12 @@
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
-using Unity.Netcode;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Audio;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
-    public GameObject[] players;
+    public GameObject player;
 
     enum GameState
     {
@@ -35,59 +31,50 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        instance = this;
-        if (!NetworkManager.Singleton.IsServer)
+        if (instance == null)
         {
-            return;
+            instance = this;
         }
-        Debug.Log("eyo");
+        player = Instantiate(player);
         StartWave();
     }
-    public void EnemyKilled()
+    public void OnEnemyDeath()
     {
-        PointsChange(100);
-        if (NetworkManager.Singleton.IsClient)
-        {
-            return;
-        }
+        AddPoints(100);
         currentEnemies--;
         if (currentEnemies <= 0)
         {
-            StartRest();
+            StartCoroutine(WaveInterval());
         }
     }
-    public void PointsChange(int amount)
+
+    public void AddPoints(int amount)
     {
         points += amount;
         pointsToScreen.text = points.ToString();
     }
 
-    private void StartRest()
-    {
-        StartCoroutine(Rest());
-    }
-    IEnumerator Rest()
+    IEnumerator WaveInterval()
     {
         yield return new WaitForSeconds(1f);
         StartWave();
     }
+
     void StartWave()
     {
         waveNumber++;
         wavesToScreen.text = waveNumber.ToString();
-        Debug.Log("eyo");
-        StartCoroutine(Wave());
+        StartCoroutine(SpawnWave());
     }
-    IEnumerator Wave()
+
+    IEnumerator SpawnWave()
     {
         maxEnemies += 5;
         currentEnemies = maxEnemies;
         for (int i = 0; i < maxEnemies; i++)
         {
-            Debug.Log(i);
-            int RandomSpawn = UnityEngine.Random.Range(0, spawns.Length);
+            int RandomSpawn = Random.Range(0, spawns.Length);
             GameObject NewEnemy = Instantiate(enemyPref, spawns[RandomSpawn].position, Quaternion.identity);
-            NewEnemy.GetComponent<NetworkObject>().Spawn();
             yield return new WaitForSeconds(0.5f);
         }
     }
