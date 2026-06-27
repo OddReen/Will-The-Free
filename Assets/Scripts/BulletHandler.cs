@@ -22,7 +22,7 @@ public class BulletHandler : MonoBehaviour
         {
             if (hit.collider != null)
             {
-                HealthSystem hitHealthSystem = hit.collider.gameObject.GetComponent<HealthSystem>();
+                HealthSystem hitHealthSystem = hit.collider.gameObject.GetComponentInParent<HealthSystem>();
                 if (hitHealthSystem != null)
                 {
                     hitHealthSystem.TakeDamage(damage);

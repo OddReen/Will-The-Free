@@ -4,19 +4,15 @@ using UnityEngine.AI;
 
 public class EnemyBehaviour : MonoBehaviour
 {
-    public GameObject closestPlayer;
-
     [SerializeField] AudioClip[] moans;
 
-    public Action action;
+    public State state;
 
-    public enum Action
+    public enum State
     {
         Idle,
         Chase,
-        LookingForFood,
-        FuellingCampfire,
-        Patrolling
+        Attack
     }
 
     [Header("Bool")]
@@ -28,41 +24,26 @@ public class EnemyBehaviour : MonoBehaviour
     NavMeshPath path;
     Animator animator;
 
-    [Header("Movement")]
-    [SerializeField] MovementState movementState;
-    enum MovementState
-    {
-        Idle,
-        Walk,
-        Run
-    }
+    [Header("Attack")]
+    bool isAttacking;
+    public float attackDistance = 2.0f;
+    public float currentAnimTimer;
+    public float maxAnimTimer;
 
-    [SerializeField] private float speed;
-    [SerializeField] private float targetSpeed;
+    [Header("Movement")]
+    [SerializeField] private float currentSpeed;
+    [SerializeField] private float currentTargetSpeed;
+
+    [SerializeField] private float movementSpeed;
     [SerializeField] private float movementTransitionSpeed;
-    [SerializeField] private float walkSpeed;
-    [SerializeField] private float runSpeed;
-    [SerializeField] private float rotateSpeed;
-    private Vector3 targetDirection;
+    [SerializeField] private float rotationSpeed;
     private Vector3 direction;
     private Vector3 velocity;
 
-    [Header("Patrol")]
-    [SerializeField] Transform randPointOrigin;
-    [SerializeField] float randPointRange;
-    [SerializeField] float waitTimer = 0;
-    [SerializeField] float randomWaitTime;
-    [SerializeField] float minWaitingTime;
-    [SerializeField] float maxWaitingTime;
-    Vector3 destination;
+    [Header("Path")]
     [SerializeField] bool pathFound = false;
     private Vector3[] pathPoints;
     [SerializeField] private float stoppingThreshold;
-
-    [Header("Detect Characters")]
-    [SerializeField] float distanceToCharacter;
-
-    bool actionStarted = false;
 
     public void OnSpawn()
     {
@@ -87,43 +68,53 @@ public class EnemyBehaviour : MonoBehaviour
     }
     private void Update()
     {
-        targetSpeed = NPCTargetSpeed();
+        UpdateState();
 
-        switch (action)
+        GameObject Player = GameManager.instance.player;
+
+        switch (state)
         {
-            case Action.Chase:
-                movementState = MovementState.Walk;
-                ChasePlayer();
+            case State.Idle:
+                currentTargetSpeed = 0;
                 break;
-            case Action.Idle:
+            case State.Chase:
+                currentTargetSpeed = movementSpeed;
+                if (Player != null)
+                {
+                    CalculatePathTo(Player.transform.position);
+                    Vector3 pathDirection = PathDirection();
+                    MoveTo(pathDirection);
+                    RotateTo(pathDirection);
+                }
+                break;
+            case State.Attack:
+                Attack();
+                if (Player != null)
+                {
+                    Vector3 directionToPlayer = (Player.transform.position - transform.position).normalized;
+                    RotateTo(directionToPlayer);
+                }
                 break;
         }
-        targetDirection = NPCDirection();
-
-
-        MoveTo(targetDirection);
-        RotateTo(targetDirection);
-
-        Animation();
     }
-    float NPCTargetSpeed()
+
+    void UpdateState()
     {
-        if (movementState == MovementState.Run)
+        if (IsTargetInReachForAttack() || isAttacking)
         {
-            return runSpeed;
+            state = State.Attack;
         }
-        else if (movementState == MovementState.Walk)
+        else if (CanMove())
         {
-            movementState = MovementState.Walk;
-            return walkSpeed;
+            state = State.Chase;
         }
         else
         {
-            movementState = MovementState.Idle;
-            return 0;
+            state = State.Idle;
         }
     }
-    Vector3 NPCDirection()
+
+    Vector3 PathDirection()
     {
         if (pathFound && path.corners.Length >= 2)
         {
@@ -133,7 +124,7 @@ public class EnemyBehaviour : MonoBehaviour
         }
         else
         {
-            return Vector3.zero;
+            return transform.forward;
         }
     }
 
@@ -143,19 +134,20 @@ public class EnemyBehaviour : MonoBehaviour
         {
             float targetRotation = Mathf.Atan2(targetDirection.x, targetDirection.z) * Mathf.Rad2Deg;
 
-            float smoothRotation = Mathf.LerpAngle(transform.eulerAngles.y, targetRotation, rotateSpeed * Time.deltaTime);
+            float smoothRotation = Mathf.LerpAngle(transform.eulerAngles.y, targetRotation, rotationSpeed * Time.deltaTime);
 
             if (canRotate)
                 transform.rotation = Quaternion.Euler(transform.eulerAngles.x, smoothRotation, transform.eulerAngles.z);
         }
     }
+
     void MoveTo(Vector3 targetDirection)
     {
         direction = Vector3.MoveTowards(direction, targetDirection, movementTransitionSpeed * Time.deltaTime);
 
-        speed = Mathf.MoveTowards(speed, targetSpeed, movementTransitionSpeed * Time.deltaTime);
+        currentSpeed = Mathf.MoveTowards(currentSpeed, currentTargetSpeed, movementTransitionSpeed * Time.deltaTime);
 
-        velocity = transform.position + direction * speed * Time.deltaTime;
+        velocity = transform.position + direction * currentSpeed * Time.deltaTime;
 
         NavMeshHit hit;
         bool isValid = NavMesh.SamplePosition(velocity, out hit, 100.0f, NavMesh.AllAreas);
@@ -165,54 +157,67 @@ public class EnemyBehaviour : MonoBehaviour
             transform.position = hit.position;
         }
     }
-    void Animation()
+    void Attack()
     {
-        //Vector3 deltaVelocity = (transform.position - lastPosition) / Time.deltaTime;
-
-        //animator.SetFloat("Movement", deltaVelocity.magnitude);
-
-        //animator.SetFloat("Movement", speed);
-    }
-    void CalculatePath()
-    {
-        pathFound = NavMesh.CalculatePath(transform.position, destination, -1, path);
-    }
-    public void ChangeState(Action newAction)
-    {
-        hasArrived = false;
-        actionStarted = false;
-        action = newAction;
-    }
-    void ChasePlayer()
-    {
-        if (!actionStarted)
+        if (!isAttacking)
         {
-            targetSpeed = runSpeed;
-            actionStarted = true;
-        }
-
-        GameObject target = GameManager.instance.player;
-
-        if (target == null)
-        {
-            return;
-        }
-
-        NavMeshHit hit;
-        bool isValid = NavMesh.SamplePosition(target.transform.position, out hit, 100.0f, NavMesh.AllAreas);
-        if (isValid)
-        {
-            destination = hit.position;
-        }
-
-        if (hasArrived)
-        {
-            hasArrived = false;
+            isAttacking = true;
+            animator.CrossFade("Attack", 0.1f, 0);
+            maxAnimTimer = animator.GetCurrentAnimatorClipInfo(0)[0].clip.length;
         }
         else
         {
-            CalculatePath();
-            hasArrived = path.corners.Length >= 2 && Vector3.Distance(transform.position, destination) < stoppingThreshold;
+            currentAnimTimer += Time.deltaTime;
+            if (currentAnimTimer >= maxAnimTimer)
+            {
+                animator.CrossFade("Walking", 0.1f, 0);
+                currentAnimTimer = 0;
+                isAttacking = false;
+            }
+        }
+    }
+
+    bool IsTargetInReachForAttack()
+    {
+        bool OutBool = false;
+
+        GameObject target = GameManager.instance.player;
+        if (target != null)
+        {
+            OutBool = Vector3.Distance(transform.position, target.transform.position) < attackDistance;
+        }
+
+        return OutBool;
+    }
+    bool CanMove()
+    {
+        return true;
+    }
+
+    public void ChangeState(State newAction)
+    {
+        hasArrived = false;
+        state = newAction;
+    }
+    void CalculatePathTo(Vector3 InDestination)
+    {
+        // Update Destination
+        NavMeshHit hit;
+        bool isValid = NavMesh.SamplePosition(InDestination, out hit, 100.0f, NavMesh.AllAreas);
+        if (isValid)
+        {
+            Vector3 destination = hit.position;
+
+            // Not arrived? Then recalculate path
+            if (!hasArrived)
+            {
+                pathFound = NavMesh.CalculatePath(transform.position, destination, -1, path);
+                hasArrived = path.corners.Length >= 2 && Vector3.Distance(transform.position, destination) < stoppingThreshold;
+            }
+            else
+            {
+            hasArrived = false;
+            }
         }
     }
 
@@ -234,11 +239,6 @@ public class EnemyBehaviour : MonoBehaviour
                     Gizmos.DrawSphere(path.corners[i], .25f);
                 }
             }
-        }
-        if (randPointOrigin != null)
-        {
-            Gizmos.color = Color.blue;
-            Gizmos.DrawWireSphere(randPointOrigin.position, randPointRange);
         }
     }
 }

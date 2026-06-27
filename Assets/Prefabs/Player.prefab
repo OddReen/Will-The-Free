@@ -60,6 +60,7 @@ GameObject:
   - component: {fileID: 2778118483430638530}
   - component: {fileID: 5182594787103755796}
   - component: {fileID: 6681561814405476311}
+  - component: {fileID: 4866565495195154803}
   - component: {fileID: 1296262198941461963}
   - component: {fileID: 8759055556667570004}
   - component: {fileID: 2221403275139898328}
@@ -141,6 +142,20 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
+--- !u!114 &4866565495195154803
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1084693315158143946}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a961e3b07b157f479c25bfededcba08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HealthSystem_Player
+  currentHealth: 0
+  maxHealth: 100
 --- !u!114 &1296262198941461963
 MonoBehaviour:
   m_ObjectHideFlags: 0

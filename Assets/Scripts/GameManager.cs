@@ -1,6 +1,9 @@
 using System.Collections;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -11,15 +14,23 @@ public class GameManager : MonoBehaviour
     enum GameState
     {
         MainMenu,
+        DeathScreen,
         Wave,
         Rest
     }
 
     [SerializeField] GameState gameState = GameState.MainMenu;
 
+    public GameObject gameplayHUD;
+
     [Header("Points")]
     [SerializeField] int points;
     [SerializeField] TextMeshProUGUI pointsToScreen;
+
+    [Header("Player Death")]
+    public GameObject DeathScreen;
+    public Button restart;
+    public Button quit;
 
     [Header("Waves")]
     [SerializeField] int waveNumber;
@@ -29,12 +40,14 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject enemyPref;
     [SerializeField] Transform[] spawns;
 
-    private void Start()
+    private void Awake()
     {
         if (instance == null)
         {
             instance = this;
         }
+        restart.onClick.AddListener(OnRestart);
+        quit.onClick.AddListener(OnQuit);
         player = Instantiate(player);
         StartWave();
     }
@@ -77,5 +90,23 @@ public class GameManager : MonoBehaviour
             GameObject NewEnemy = Instantiate(enemyPref, spawns[RandomSpawn].position, Quaternion.identity);
             yield return new WaitForSeconds(0.5f);
         }
+    }
+
+    public void OnDeath()
+    {
+        gameplayHUD.SetActive(false);
+        DeathScreen.SetActive(true);
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+    }
+
+    public void OnRestart()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    public void OnQuit()
+    {
+        Application.Quit();
     }
 }

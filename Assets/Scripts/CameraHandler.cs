@@ -25,7 +25,7 @@ public class CameraHandler : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
-    private void Update()
+    private void LateUpdate()
     {
         Rotation();
     }
@@ -40,7 +40,7 @@ public class CameraHandler : MonoBehaviour
 
         Pitch = Mathf.Clamp(Pitch, -90f, 90f);
 
-        transform.rotation = Quaternion.Euler(0, Yaw, 0);
+        GetComponent<Rigidbody>().MoveRotation(Quaternion.Euler(0, Yaw, 0));
 
         orientation.localRotation = Quaternion.Euler(Pitch, 0, 0);
     }
