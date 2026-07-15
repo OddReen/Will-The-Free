@@ -2,8 +2,6 @@ using UnityEngine;
 
 public class MovementHandler : MonoBehaviour
 {
-    [SerializeField] InputHandler inputHandler;
-
     [Header("Movement")]
     public float moveSpeed;
     public float groundDrag;
@@ -20,7 +18,7 @@ public class MovementHandler : MonoBehaviour
 
     Vector3 moveDirection;
 
-    Rigidbody rb;
+    public Rigidbody rb;
 
     [SerializeField] Animator animator;
 
@@ -33,7 +31,7 @@ public class MovementHandler : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
 
-        inputHandler.OnJump += Jump;
+        InputHandler.instance.OnJump += Jump;
     }
     private void Awake()
     {
@@ -57,8 +55,8 @@ public class MovementHandler : MonoBehaviour
     }
     private void Input()
     {
-        horizontalInput = inputHandler.moveInputValue.x;
-        verticalInput = inputHandler.moveInputValue.y;
+        horizontalInput = InputHandler.instance.moveInputValue.x;
+        verticalInput = InputHandler.instance.moveInputValue.y;
     }
     private void MovePlayer()
     {

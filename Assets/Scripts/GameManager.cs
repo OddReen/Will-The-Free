@@ -23,6 +23,19 @@ public class GameManager : MonoBehaviour
 
     public GameObject gameplayHUD;
 
+    [Header("InGameMenu")]
+    [SerializeField] GameObject inGameMenu;
+
+    [Header("Player Spawn")]
+    [SerializeField] Transform playerSpawn;
+
+    [Header("HealthBar")]
+    [SerializeField] TextMeshProUGUI textHealthBar;
+    [SerializeField] Image imageHealthBar;
+
+    [Header("Ammo")]
+    [SerializeField] TextMeshProUGUI textAmmo;
+
     [Header("Points")]
     [SerializeField] int points;
     [SerializeField] TextMeshProUGUI pointsToScreen;
@@ -40,17 +53,36 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject enemyPref;
     [SerializeField] Transform[] spawns;
 
-    private void Awake()
+    private void Start()
     {
         if (instance == null)
         {
             instance = this;
         }
+        InputHandler.instance.OnInGameMenu += InGameMenu;
         restart.onClick.AddListener(OnRestart);
         quit.onClick.AddListener(OnQuit);
-        player = Instantiate(player);
+        player = Instantiate(player, playerSpawn.position, Quaternion.identity);
         StartWave();
     }
+
+    public void InGameMenu()
+    {
+        inGameMenu.SetActive(!inGameMenu.activeSelf);
+        Time.timeScale = inGameMenu.activeSelf ? 0.0f : 1.0f;
+    }
+
+    public void HealthBarUpdate(float InCurrentHealth, float InMaxHealth)
+    {
+        textHealthBar.text = InCurrentHealth + "/" + InMaxHealth;
+        imageHealthBar.fillAmount = InCurrentHealth/InMaxHealth;
+    }
+
+    public void AmmoUpdate(float InCurrentAmmo, float InMagazineSize)
+    {
+        textAmmo.text = InCurrentAmmo + "/" + InMagazineSize;
+    }
+
     public void OnEnemyDeath()
     {
         AddPoints(100);

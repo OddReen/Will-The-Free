@@ -3,17 +3,12 @@ using UnityEngine;
 
 public class CameraHandler : MonoBehaviour
 {
-    [SerializeField] InputHandler inputHandler;
-
-    [SerializeField] CinemachineCamera cinemachineCamera;
+    public CinemachineCamera cinemachineCamera;
 
     [SerializeField, Range(0, 100)]
     public float sensibility = 25;
 
     public Transform orientation;
-
-    float Pitch;
-    float Yaw;
 
     private void Awake()
     {
@@ -31,17 +26,13 @@ public class CameraHandler : MonoBehaviour
     }
     void Rotation()
     {
-        float moveX = inputHandler.lookInputValue.x * Time.deltaTime * sensibility;
-        float moveY = inputHandler.lookInputValue.y * Time.deltaTime * sensibility;
-
-        Yaw += moveX;
-
-        Pitch -= moveY;
-
-        Pitch = Mathf.Clamp(Pitch, -90f, 90f);
-
+        float moveX = InputHandler.instance.lookInputValue.x * Time.deltaTime * sensibility;
+        float Yaw = GetComponent<Rigidbody>().rotation.eulerAngles.y + moveX;
         GetComponent<Rigidbody>().MoveRotation(Quaternion.Euler(0, Yaw, 0));
 
+        float moveY = InputHandler.instance.lookInputValue.y * Time.deltaTime * sensibility;
+        float Pitch = orientation.localRotation.eulerAngles.x - moveY;
+        //Pitch = Mathf.Clamp(Pitch, -90f, 90f);
         orientation.localRotation = Quaternion.Euler(Pitch, 0, 0);
     }
 }

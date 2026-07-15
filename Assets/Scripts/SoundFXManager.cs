@@ -7,11 +7,13 @@ public class SoundFXManager : MonoBehaviour
     [SerializeField] private AudioSource soundFXPrefab; // Prefab with a NetworkObject component
     [SerializeField] private AudioClip[] footStepClips;
     [SerializeField] private AudioClip[] gunshotClips;
+    [SerializeField] private AudioClip[] reloadClips;
 
     public enum SoundCategory
     {
         Footstep,
-        Gunshot
+        Gunshot,
+        Reload
     }
 
     private void Awake()
@@ -36,6 +38,10 @@ public class SoundFXManager : MonoBehaviour
                 if (gunshotClips.Length > 0)
                     rand = Random.Range(0, gunshotClips.Length);
                 break;
+                case SoundCategory.Reload:
+                if (reloadClips.Length > 0)
+                    rand = Random.Range(0, gunshotClips.Length);
+                break;
         }
         // Call the ServerRpc to handle spawning.
         PlaySoundFXServerRpc((int)category, rand, spawnTransform.position, volume, attached);
@@ -54,6 +60,10 @@ public class SoundFXManager : MonoBehaviour
             case SoundCategory.Gunshot:
                 if (clipIndex >= 0 && clipIndex < gunshotClips.Length)
                     clip = gunshotClips[clipIndex];
+                break;
+            case SoundCategory.Reload:
+                if (clipIndex >= 0 && clipIndex < reloadClips.Length)
+                    clip = reloadClips[clipIndex];
                 break;
         }
         if (clip == null)

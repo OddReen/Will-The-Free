@@ -2,10 +2,9 @@ using UnityEngine;
 
 public class InteractSystem : MonoBehaviour
 {
-    [SerializeField] InputHandler inputHandler;
     private void Start()
     {
-        inputHandler.OnInteract += DetectObject;
+        InputHandler.instance.OnInteract += DetectObject;
     }
     private void DetectObject()
     {

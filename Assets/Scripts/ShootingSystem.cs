@@ -1,17 +1,13 @@
+using System;
 using UnityEngine;
+using UnityEngine.ProBuilder;
 
 public class ShootingSystem : MonoBehaviour
 {
-    [SerializeField] InputHandler inputHandler;
-
     public AudioClip[] shootingSounds;
 
     [SerializeField] GameObject bulletPref;
     [SerializeField] Transform barrelEnd;
-
-    [SerializeField] float bulletSpeed;
-
-    [SerializeField] float damage;
 
     [SerializeField] Animator animator;
 
@@ -19,17 +15,41 @@ public class ShootingSystem : MonoBehaviour
 
     Vector3 bulletDir;
 
+    bool isShootingCooldown = false;
+    bool isReloading = false;
+    bool isAiming = false;
+
+    [Serializable]
+    public struct Gun
+    {
+        public bool isAutomatic;
+        public float reloadTime;
+        public int ammoAmount;
+        public int magazineSize;
+        public float shootingCooldown;
+        public float damage;
+        public float projectileSpeed;
+        public float recoil;
+    }
+
+    [SerializeField]
+    public Gun defaultGun;
+
     private void Start()
     {
-        inputHandler.OnShoot += Shoot;
+        InputHandler.instance.OnShootDown += OnShoot;
+        InputHandler.instance.OnAim += Aim;
+        InputHandler.instance.OnStopAim += StopAim;
+        InputHandler.instance.OnReload += StartReload;
 
-        inputHandler.OnAim += Aim;
-        inputHandler.OnStopAim += StopAim;
+        defaultGun.ammoAmount = defaultGun.magazineSize;
+        GameManager.instance.AmmoUpdate(defaultGun.ammoAmount, defaultGun.magazineSize);
     }
     private void Update()
     {
         DetectTargetedPoint();
     }
+
     void DetectTargetedPoint()
     {
         if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, float.MaxValue))
@@ -44,21 +64,80 @@ public class ShootingSystem : MonoBehaviour
             bulletDir = (Camera.main.transform.forward * 1000 - barrelEnd.position).normalized;
         }
     }
+
+    void OnShoot()
+    {
+        if (!isShootingCooldown)
+        {
+            Shoot();
+            isShootingCooldown = true;
+            Invoke(nameof(ShootingUnrestrict), defaultGun.shootingCooldown);
+        }
+    }
+
+    void Recoil()
+    {
+        float XRot = GetComponent<CameraHandler>().orientation.localRotation.eulerAngles.x;
+        GetComponent<CameraHandler>().orientation.localRotation = Quaternion.Euler(XRot - defaultGun.recoil, 0, 0);
+    }
+
     void Shoot()
     {
-        animator.SetTrigger("Shoot");
-        //SoundFXManager.instance.PlayerRandomSoundFXClip(shootingSounds, transform, 1, false);
-        Quaternion bulletRotation = Quaternion.LookRotation(barrelEnd.right, barrelEnd.forward);
-        GameObject NewBullet = Instantiate(bulletPref, barrelEnd.position, bulletRotation);
-        NewBullet.GetComponent<BulletHandler>().damage = damage;
-        NewBullet.GetComponent<Rigidbody>().linearVelocity = bulletDir * bulletSpeed;
+        if (defaultGun.ammoAmount > 0)
+        {
+            Recoil();
+            isShootingCooldown = false;
+
+            string shootAnim = isAiming ? "Gun_AimShoot" : "Gun_Shoot";
+            //animator.CrossFade(shootAnim, 0.0f);
+            animator.Play(shootAnim);
+
+            SoundFXManager.instance.TriggerRandomSoundFX(SoundFXManager.SoundCategory.Gunshot, transform, 1, false);
+            Quaternion bulletRotation = Quaternion.LookRotation(barrelEnd.right, barrelEnd.forward);
+            GameObject NewBullet = Instantiate(bulletPref, barrelEnd.position, bulletRotation);
+            NewBullet.GetComponent<BulletHandler>().damage = defaultGun.damage;
+            NewBullet.GetComponent<Rigidbody>().linearVelocity = bulletDir * defaultGun.projectileSpeed;
+
+            defaultGun.ammoAmount--;
+            GameManager.instance.AmmoUpdate(defaultGun.ammoAmount, defaultGun.magazineSize);
+        }
+        else
+        {
+            StartReload();
+        }
     }
+
+    void ShootingUnrestrict()
+    {
+        isShootingCooldown = false;
+    }
+
+    void StartReload()
+    {
+        if (!isReloading && defaultGun.ammoAmount < defaultGun.magazineSize)
+        {
+            SoundFXManager.instance.TriggerRandomSoundFX(SoundFXManager.SoundCategory.Reload, transform, 1, false);
+            isReloading = true;
+            Invoke(nameof(Reload), defaultGun.reloadTime);
+        }
+    }
+
+    void Reload()
+    {
+        defaultGun.ammoAmount = defaultGun.magazineSize;
+        GameManager.instance.AmmoUpdate(defaultGun.ammoAmount, defaultGun.magazineSize);
+        isReloading = false;
+    }
+    
     void Aim()
     {
-        animator.SetBool("Aim", true);
+        isAiming = true;
+        animator.CrossFade("Gun_AimIdle", 0.0f);
     }
+
     void StopAim()
     {
-        animator.SetBool("Aim", false);
+        isAiming = false;
+        animator.CrossFade("Gun_Idle", 0.0f);
     }
 }

@@ -13,6 +13,11 @@ public class BulletHandler : MonoBehaviour
 
     private void Update()
     {
+        ShootBullet();
+    }
+
+    public void ShootBullet()
+    {
         RaycastHit hit;
         Vector3 bulletDir = (transform.position - lastPosition).normalized;
         float bulletDistance = Vector3.Distance(transform.position, lastPosition);
@@ -20,7 +25,7 @@ public class BulletHandler : MonoBehaviour
 
         if (Physics.Raycast(lastPosition, bulletDir, out hit, bulletDistance))
         {
-            if (hit.collider != null)
+            if (hit.collider != null && !hit.collider.CompareTag("Player"))
             {
                 HealthSystem hitHealthSystem = hit.collider.gameObject.GetComponentInParent<HealthSystem>();
                 if (hitHealthSystem != null)
@@ -33,6 +38,7 @@ public class BulletHandler : MonoBehaviour
         }
         lastPosition = transform.position;
     }
+
     void DestroyBullet()
     {
         Destroy(gameObject);

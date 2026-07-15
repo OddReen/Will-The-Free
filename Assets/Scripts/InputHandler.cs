@@ -4,12 +4,17 @@ using UnityEngine.InputSystem;
 
 public class InputHandler : MonoBehaviour
 {
+    public static InputHandler instance;
+
     InputSystem_Actions action;
 
     public Vector2 moveInputValue;
     public Vector2 lookInputValue;
+    public Action OnInGameMenu;
     public Action OnJump;
-    public Action OnShoot;
+    public Action OnShootDown;
+    public Action OnShootUp;
+    public Action OnReload;
     public Action OnAim;
     public Action OnStopAim;
     public Action OnInteract;
@@ -20,9 +25,17 @@ public class InputHandler : MonoBehaviour
     }
     public void OnSpawn()
     {
+        if (instance == null)
+        {
+            instance = this;
+        }
+
         action = new InputSystem_Actions();
 
         action.Enable();
+
+        action.Player.InGameMenu.performed += InGameMenu_performed;
+        action.Player.InGameMenu.canceled += InGameMenu_canceled;
 
         action.Player.Move.performed += Move_performed;
         action.Player.Move.canceled += Move_canceled;
@@ -36,11 +49,23 @@ public class InputHandler : MonoBehaviour
         action.Player.Shoot.performed += Shoot_performed;
         action.Player.Shoot.canceled += Shoot_canceled;
 
+        action.Player.Reload.performed += Reload_performed;
+        action.Player.Reload.canceled += Reload_canceled;
+
         action.Player.Aim.performed += Aim_performed;
         action.Player.Aim.canceled += Aim_canceled;
 
         action.Player.Interact.performed += Interact_performed;
         action.Player.Interact.canceled += Interact_canceled;
+    }
+
+    private void InGameMenu_canceled(InputAction.CallbackContext context)
+    {
+
+    }
+    private void InGameMenu_performed(InputAction.CallbackContext context)
+    {
+        OnInGameMenu?.Invoke();
     }
 
     private void Interact_canceled(InputAction.CallbackContext context)
@@ -77,11 +102,19 @@ public class InputHandler : MonoBehaviour
     }
     private void Shoot_canceled(InputAction.CallbackContext context)
     {
-
+        OnShootUp?.Invoke();
     }
     private void Shoot_performed(InputAction.CallbackContext context)
     {
-        OnShoot?.Invoke();
+        OnShootDown?.Invoke();
+    }
+    private void Reload_canceled(InputAction.CallbackContext context)
+    {
+
+    }
+    private void Reload_performed(InputAction.CallbackContext context)
+    {
+        OnReload?.Invoke();
     }
     private void Aim_performed(InputAction.CallbackContext context)
     {

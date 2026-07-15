@@ -15,6 +15,8 @@ public class EnemyBehaviour : MonoBehaviour
         Attack
     }
 
+    [SerializeField] Rigidbody rb;
+
     [Header("Bool")]
     [SerializeField] public bool canMove;
     [SerializeField] public bool canRotate;
@@ -26,6 +28,7 @@ public class EnemyBehaviour : MonoBehaviour
 
     [Header("Attack")]
     bool isAttacking;
+    public float damage;
     public float attackDistance = 2.0f;
     public float currentAnimTimer;
     public float maxAnimTimer;
@@ -45,23 +48,6 @@ public class EnemyBehaviour : MonoBehaviour
     private Vector3[] pathPoints;
     [SerializeField] private float stoppingThreshold;
 
-    public void OnSpawn()
-    {
-        animator = GetComponentInChildren<Animator>();
-        path = new NavMeshPath();
-        hasArrived = false;
-
-        StartCoroutine(Sounds());
-    }
-    IEnumerator Sounds()
-    {
-        while (true)
-        {
-            float rand = Random.Range(0, 15);
-            yield return new WaitForSeconds(rand);
-            //SoundFXManager.instance.PlayerRandomSoundFXClip(moans, transform, 1, true);
-        }
-    }
     private void Awake()
     {
         OnSpawn();
@@ -98,6 +84,21 @@ public class EnemyBehaviour : MonoBehaviour
         }
     }
 
+    public void OnSpawn()
+    {
+        animator = GetComponentInChildren<Animator>();
+        path = new NavMeshPath();
+        hasArrived = false;
+    }
+
+    IEnumerator Sounds()
+    {
+        while (true)
+        {
+            float rand = Random.Range(0, 15);
+            yield return new WaitForSeconds(rand);
+        }
+    }
     void UpdateState()
     {
         if (IsTargetInReachForAttack() || isAttacking)
@@ -147,32 +148,53 @@ public class EnemyBehaviour : MonoBehaviour
 
         currentSpeed = Mathf.MoveTowards(currentSpeed, currentTargetSpeed, movementTransitionSpeed * Time.deltaTime);
 
-        velocity = transform.position + direction * currentSpeed * Time.deltaTime;
+        velocity = direction * currentSpeed * Time.deltaTime;
 
         NavMeshHit hit;
-        bool isValid = NavMesh.SamplePosition(velocity, out hit, 100.0f, NavMesh.AllAreas);
+        bool isValid = NavMesh.SamplePosition(transform.position + velocity, out hit, 100.0f, NavMesh.AllAreas);
 
         if (canMove && isValid)
         {
-            transform.position = hit.position;
+            rb.MovePosition(hit.position);
         }
     }
+
     void Attack()
     {
         if (!isAttacking)
         {
             isAttacking = true;
-            animator.CrossFade("Attack", 0.1f, 0);
-            maxAnimTimer = animator.GetCurrentAnimatorClipInfo(0)[0].clip.length;
+            float transitionTime = 0.1f;
+            animator.CrossFade("Attack", transitionTime, 0);
+            StartCoroutine(CaptureAttackLength(transitionTime));
         }
-        else
+    }
+
+    IEnumerator CaptureAttackLength(float transitionTime)
+    {
+        yield return new WaitForSeconds(transitionTime);
+        maxAnimTimer = animator.GetCurrentAnimatorStateInfo(0).length;
+        while (isAttacking)
         {
             currentAnimTimer += Time.deltaTime;
             if (currentAnimTimer >= maxAnimTimer)
             {
                 animator.CrossFade("Walking", 0.1f, 0);
-                currentAnimTimer = 0;
+                currentAnimTimer = 0f;
                 isAttacking = false;
+            }
+            yield return null;
+        }
+    }
+
+    public void OnAttackAnimEvent()
+    {
+        GameObject Player = GameManager.instance.player;
+        if (Player != null)
+        {
+            if (Vector3.Distance(Player.transform.position, transform.position) < attackDistance)
+            {
+                Player.GetComponent<HealthSystem>().TakeDamage(damage);
             }
         }
     }
@@ -199,6 +221,7 @@ public class EnemyBehaviour : MonoBehaviour
         hasArrived = false;
         state = newAction;
     }
+
     void CalculatePathTo(Vector3 InDestination)
     {
         // Update Destination
