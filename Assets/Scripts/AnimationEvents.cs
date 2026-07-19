@@ -14,7 +14,7 @@ public class AnimationEvents : MonoBehaviour
 
     public void Steps()
     {
-        //SoundFXManager.instance.PlayerRandomSoundFXClip(steps, stepPos, 1, true);
+        SoundFXManager.instance.TriggerRandomSoundFX(SoundFXManager.SoundCategory.Footstep, stepPos, 1, true);
     }
 
     public void OnAttackAnimEvent()

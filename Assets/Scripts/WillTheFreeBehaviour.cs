@@ -2,17 +2,17 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class EnemyBehaviour : MonoBehaviour
+public class WillTheFreeBehaviour : MonoBehaviour
 {
     [SerializeField] AudioClip[] moans;
 
-    public State state;
+    public State currentState;
 
     public enum State
     {
         Idle,
-        Chase,
-        Attack
+        ChasePlayer,
+        WanderingAround
     }
 
     [SerializeField] Rigidbody rb;
@@ -21,6 +21,7 @@ public class EnemyBehaviour : MonoBehaviour
     [SerializeField] public bool canMove;
     [SerializeField] public bool canRotate;
     [SerializeField] bool hasArrived = true;
+    [SerializeField] bool changedState = false;
 
     [Header("References")]
     NavMeshPath path;
@@ -43,6 +44,13 @@ public class EnemyBehaviour : MonoBehaviour
     private Vector3 direction;
     private Vector3 velocity;
 
+    [Header("Wandering Around")]
+    [SerializeField] Transform[] wanderingPoints;
+    [SerializeField] Vector3 wanderingDestination;
+    [SerializeField] Vector2 maxMinWaitTime = new Vector2(5, 10);
+    [SerializeField] float currentWaitTime;
+    [SerializeField] float timer;
+
     [Header("Path")]
     [SerializeField] bool pathFound = false;
     private Vector3[] pathPoints;
@@ -51,19 +59,26 @@ public class EnemyBehaviour : MonoBehaviour
     private void Awake()
     {
         OnSpawn();
+        int randWanderingPointIndex = Random.Range(0, wanderingPoints.Length);
+        wanderingDestination = wanderingPoints[randWanderingPointIndex].position;
     }
+
     private void Update()
     {
         UpdateState();
+        ApplyBehaviour();
+    }
 
+    private void ApplyBehaviour()
+    {
         GameObject Player = GameManager.instance.player;
 
-        switch (state)
+        switch (currentState)
         {
             case State.Idle:
                 currentTargetSpeed = 0;
                 break;
-            case State.Chase:
+            case State.ChasePlayer:
                 currentTargetSpeed = movementSpeed;
                 if (Player != null)
                 {
@@ -73,14 +88,36 @@ public class EnemyBehaviour : MonoBehaviour
                     RotateTo(pathDirection);
                 }
                 break;
-            case State.Attack:
-                Attack();
+            case State.WanderingAround:
                 if (Player != null)
                 {
-                    Vector3 directionToPlayer = (Player.transform.position - transform.position).normalized;
-                    RotateTo(directionToPlayer);
+                    WanderingAround();
+                    CalculatePathTo(wanderingDestination);
+                    Vector3 pathDirection = PathDirection();
+                    MoveTo(pathDirection);
+                    RotateTo(pathDirection);
                 }
                 break;
+        }
+    }
+
+    void WanderingAround()
+    {
+        if (hasArrived)
+        {
+            timer += Time.deltaTime;
+            if (changedState)
+            {
+                currentWaitTime = Random.Range(maxMinWaitTime.x, maxMinWaitTime.y);
+            }
+            if (timer >= currentWaitTime)
+            {
+                currentWaitTime = Random.Range(maxMinWaitTime.x, maxMinWaitTime.y);
+                timer = 0;
+
+                int randWanderingPointIndex = Random.Range(0, wanderingPoints.Length);
+                wanderingDestination = wanderingPoints[randWanderingPointIndex].position;
+            }
         }
     }
 
@@ -99,20 +136,24 @@ public class EnemyBehaviour : MonoBehaviour
             yield return new WaitForSeconds(rand);
         }
     }
+
     void UpdateState()
     {
-        if (IsTargetInReachForAttack() || isAttacking)
+        State lastState = currentState;
+        if (true)
         {
-            state = State.Attack;
+            currentState = State.WanderingAround;
         }
         else if (CanMove())
         {
-            state = State.Chase;
+            currentState = State.ChasePlayer;
         }
         else
         {
-            state = State.Idle;
+            currentState = State.Idle;
         }
+
+        changedState = lastState != currentState;
     }
 
     Vector3 PathDirection()
@@ -211,16 +252,9 @@ public class EnemyBehaviour : MonoBehaviour
 
         return OutBool;
     }
-
     bool CanMove()
     {
         return true;
-    }
-
-    public void ChangeState(State newAction)
-    {
-        hasArrived = false;
-        state = newAction;
     }
 
     void CalculatePathTo(Vector3 InDestination)
@@ -240,7 +274,7 @@ public class EnemyBehaviour : MonoBehaviour
             }
             else
             {
-            hasArrived = false;
+                hasArrived = false;
             }
         }
     }

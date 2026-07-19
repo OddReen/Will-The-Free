@@ -22,6 +22,7 @@ public class HealthSystem : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
+        SoundFXManager.instance.TriggerRandomSoundFX(SoundFXManager.SoundCategory.Hit, GameManager.instance.player.transform, 3, false);
         if (isInvincible)
         {
             return;

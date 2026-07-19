@@ -8,12 +8,14 @@ public class SoundFXManager : MonoBehaviour
     [SerializeField] private AudioClip[] footStepClips;
     [SerializeField] private AudioClip[] gunshotClips;
     [SerializeField] private AudioClip[] reloadClips;
+    [SerializeField] private AudioClip[] hitClips;
 
     public enum SoundCategory
     {
         Footstep,
         Gunshot,
-        Reload
+        Reload,
+        Hit
     }
 
     private void Awake()
@@ -42,6 +44,10 @@ public class SoundFXManager : MonoBehaviour
                 if (reloadClips.Length > 0)
                     rand = Random.Range(0, gunshotClips.Length);
                 break;
+            case SoundCategory.Hit:
+                if (hitClips.Length > 0)
+                    rand = Random.Range(0, hitClips.Length);
+                break;
         }
         // Call the ServerRpc to handle spawning.
         PlaySoundFXServerRpc((int)category, rand, spawnTransform.position, volume, attached);
@@ -64,6 +70,10 @@ public class SoundFXManager : MonoBehaviour
             case SoundCategory.Reload:
                 if (clipIndex >= 0 && clipIndex < reloadClips.Length)
                     clip = reloadClips[clipIndex];
+                break;
+            case SoundCategory.Hit:
+                if (clipIndex >= 0 && clipIndex < hitClips.Length)
+                    clip = hitClips[clipIndex];
                 break;
         }
         if (clip == null)
