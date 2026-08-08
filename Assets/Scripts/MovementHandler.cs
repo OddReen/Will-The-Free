@@ -108,12 +108,12 @@ public class MovementHandler : MonoBehaviour
         if (isGrounded)
         {
             rb.linearDamping = groundDrag;
-            rb.AddForce((moveDirection * targetSpeed) * Time.fixedDeltaTime);
+            rb.AddForce((moveDirection * targetSpeed) * Time.deltaTime);
         }
         else
         {
             rb.linearDamping = 0;
-            rb.AddForce((moveDirection * targetSpeed * airMultiplier) * Time.fixedDeltaTime);
+            rb.AddForce((moveDirection * targetSpeed * airMultiplier) * Time.deltaTime);
         }
     }
 

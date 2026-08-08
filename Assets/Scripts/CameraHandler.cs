@@ -4,6 +4,7 @@ using UnityEngine;
 public class CameraHandler : MonoBehaviour
 {
     public CinemachineCamera cinemachineCamera;
+    Rigidbody rb;
 
     [SerializeField, Range(0, 100)]
     public float sensibility = 25;
@@ -12,32 +13,36 @@ public class CameraHandler : MonoBehaviour
 
     public bool canRotate = true;
 
+    public float xRotation = 0.0f;
+    public float yRotation = 0.0f;
+
     private void Awake()
     {
         OnSpawn();
     }
     public void OnSpawn()
     {
+        rb = GetComponent<Rigidbody>();
         cinemachineCamera.transform.SetParent(null, false);
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
+
     private void LateUpdate()
     {
         Rotation();
     }
+
     void Rotation()
     {
         if (canRotate)
         {
-            float moveX = InputHandler.instance.lookInputValue.x * Time.deltaTime * sensibility;
-            float Yaw = GetComponent<Rigidbody>().rotation.eulerAngles.y + moveX;
-            GetComponent<Rigidbody>().MoveRotation(Quaternion.Euler(0, Yaw, 0));
+            yRotation += InputHandler.instance.lookInputValue.x * Time.deltaTime * sensibility;
+            rb.MoveRotation(Quaternion.Euler(0, yRotation, 0));
 
-            float moveY = InputHandler.instance.lookInputValue.y * Time.deltaTime * sensibility;
-            float Pitch = orientation.localRotation.eulerAngles.x - moveY;
-            //Pitch = Mathf.Clamp(Pitch, -90f, 90f);
-            orientation.localRotation = Quaternion.Euler(Pitch, 0, 0);
+            xRotation -= InputHandler.instance.lookInputValue.y * Time.deltaTime * sensibility;
+            xRotation = Mathf.Clamp(xRotation, -89.0f, 89.0f);
+            orientation.localRotation = Quaternion.Euler(xRotation, 0, 0);
         }
     }
 }

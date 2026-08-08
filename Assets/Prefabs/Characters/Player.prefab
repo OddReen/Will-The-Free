@@ -184,6 +184,8 @@ MonoBehaviour:
   sensibility: 25
   orientation: {fileID: 5329949693671627704}
   canRotate: 1
+  xRotation: 0
+  yRotation: 0
 --- !u!114 &6325895455105153948
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -301,7 +303,7 @@ MonoBehaviour:
     reloadTime: 0.5
     ammoAmount: 0
     magazineSize: 3
-    projectileSpeed: 25
+    projectileSpeed: 100
     recoil: 0
   abilityHUD:
     name: Spit

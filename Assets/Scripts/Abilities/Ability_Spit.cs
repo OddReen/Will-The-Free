@@ -5,6 +5,7 @@ using static Ability;
 
 public class Ability_Spit : Ability
 {
+    CameraHandler cameraHandler;
     RaycastHit hit;
     Vector3 bulletDir;
 
@@ -14,6 +15,7 @@ public class Ability_Spit : Ability
     public override void Start()
     {
         base.Start();
+        cameraHandler = GetComponentInParent<CameraHandler>();
         abilityData.ammoAmount = abilityData.magazineSize;
         GameManager.instance.AmmoUpdate(abilityData.ammoAmount, abilityData.magazineSize);
     }
@@ -35,8 +37,7 @@ public class Ability_Spit : Ability
 
     void Recoil()
     {
-        float XRot = GetComponent<CameraHandler>().orientation.localRotation.eulerAngles.x;
-        GetComponent<CameraHandler>().orientation.localRotation = Quaternion.Euler(XRot - abilityData.recoil, 0, 0);
+        cameraHandler.xRotation -= abilityData.recoil;
     }
 
     void Shoot()
