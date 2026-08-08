@@ -1,0 +1,240 @@
+fileFormatVersion: 2
+guid: 2e000d4b3287c5f4380a825ae3116029
+ModelImporter:
+  serializedVersion: 24200
+  internalIDToNameTable: []
+  externalObjects: {}
+  materials:
+    materialImportMode: 2
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    removeConstantScaleCurves: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 3
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 0
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
+    importPhysicalCameras: 1
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    nodeNameCollisionStrategy: 1
+    fileIdsGeneration: 2
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    keepQuads: 0
+    weldVertices: 1
+    bakeAxisConversion: 0
+    preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    optimizeBones: 1
+    generateMeshLods: 0
+    meshLodGenerationFlags: 0
+    maximumMeshLod: -1
+    meshOptimizationFlags: -1
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 1
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+    strictVertexDataChecks: 0
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
+  importAnimation: 1
+  humanDescription:
+    serializedVersion: 3
+    human: []
+    skeleton:
+    - name: WillTheFree(Clone)
+      parentName: 
+      position: {x: 0, y: 0, z: 0}
+      rotation: {x: 0, y: 0, z: 0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Circle.001
+      parentName: WillTheFree(Clone)
+      position: {x: -0.3901976, y: 9.287822, z: 1.6836561}
+      rotation: {x: 0.000000021731978, y: -0.10625053, z: 0.0000000023221784, w: 0.9943394}
+      scale: {x: 5.8591876, y: 5.859188, z: 5.8591876}
+    - name: Circle.002
+      parentName: WillTheFree(Clone)
+      position: {x: -0.38885868, y: 9.321508, z: 1.6702311}
+      rotation: {x: 0.000000021731978, y: -0.10625053, z: 0.0000000023221793, w: 0.9943394}
+      scale: {x: 17.51915, y: 17.51915, z: 17.51915}
+    - name: Cube.020
+      parentName: WillTheFree(Clone)
+      position: {x: 0.009950696, y: 7.6059165, z: 0.62695396}
+      rotation: {x: -0.7071067, y: -0.000000030908616, z: 0.000000030908623, w: 0.7071068}
+      scale: {x: 15.377319, y: 15.377319, z: 15.377319}
+    - name: Cube.021
+      parentName: WillTheFree(Clone)
+      position: {x: 0.5848056, y: 8.912723, z: 1.5651573}
+      rotation: {x: -0.7071067, y: -0.000000030908616, z: 0.000000030908623, w: 0.7071068}
+      scale: {x: 12.964142, y: 4.548004, z: 12.964142}
+    - name: Cube.022
+      parentName: WillTheFree(Clone)
+      position: {x: 0.38640448, y: 8.775283, z: 1.5651573}
+      rotation: {x: -0.7071067, y: -0.000000030908616, z: 0.000000030908623, w: 0.7071068}
+      scale: {x: 12.964142, y: 4.548004, z: 12.964142}
+    - name: Cube.023
+      parentName: WillTheFree(Clone)
+      position: {x: 0.15807693, y: 8.675528, z: 1.5651573}
+      rotation: {x: -0.7071067, y: -0.000000030908616, z: 0.000000030908623, w: 0.7071068}
+      scale: {x: 12.964142, y: 4.548004, z: 12.964142}
+    - name: Cube.024
+      parentName: WillTheFree(Clone)
+      position: {x: -0.7031391, y: 8.883904, z: 1.5651573}
+      rotation: {x: -0.69655764, y: 0.12168553, z: -0.1216855, w: 0.69655776}
+      scale: {x: 10.717687, y: 3.7599165, z: 10.717687}
+    - name: Cube.025
+      parentName: WillTheFree(Clone)
+      position: {x: -0.51803863, y: 8.786366, z: 1.5651573}
+      rotation: {x: -0.69655764, y: 0.12168553, z: -0.1216855, w: 0.69655776}
+      scale: {x: 10.717687, y: 3.7599165, z: 10.717687}
+    - name: Cube.026
+      parentName: WillTheFree(Clone)
+      position: {x: -0.3329381, y: 8.710997, z: 1.5651573}
+      rotation: {x: -0.69655764, y: 0.12168553, z: -0.1216855, w: 0.69655776}
+      scale: {x: 10.717687, y: 3.7599165, z: 10.717687}
+    - name: Cube.027
+      parentName: WillTheFree(Clone)
+      position: {x: -0.123453185, y: 8.627867, z: 1.5651573}
+      rotation: {x: -0.7071067, y: -0.000000030908616, z: 0.000000030908623, w: 0.7071068}
+      scale: {x: 12.964142, y: 4.548004, z: 12.964142}
+    - name: Cube.028
+      parentName: WillTheFree(Clone)
+      position: {x: 0.5989928, y: 9.150139, z: 1.5458279}
+      rotation: {x: -0.7041598, y: -0.064489834, z: 0.06448981, w: 0.70415986}
+      scale: {x: 12.964141, y: 4.548004, z: 12.964141}
+    - name: Cube.029
+      parentName: WillTheFree(Clone)
+      position: {x: 0.39017287, y: 9.091616, z: 1.5458279}
+      rotation: {x: -0.7041598, y: -0.064489834, z: 0.06448981, w: 0.70415986}
+      scale: {x: 12.964141, y: 4.548004, z: 12.964141}
+    - name: Cube.030
+      parentName: WillTheFree(Clone)
+      position: {x: 0.20507243, y: 9.038414, z: 1.5528789}
+      rotation: {x: -0.7071067, y: -0.000000030908616, z: 0.000000030908623, w: 0.7071068}
+      scale: {x: 12.964142, y: 4.548004, z: 12.964142}
+    - name: Cube.031
+      parentName: WillTheFree(Clone)
+      position: {x: 0.029023804, y: 8.961196, z: 1.5801023}
+      rotation: {x: -0.69482964, y: -0.13119347, z: 0.13119343, w: 0.6948297}
+      scale: {x: 12.964142, y: 4.548004, z: 12.964142}
+    - name: Cube.032
+      parentName: WillTheFree(Clone)
+      position: {x: -0.9491268, y: 9.15036, z: 1.5328932}
+      rotation: {x: -0.7071067, y: -0.000000030908616, z: 0.000000030908623, w: 0.7071068}
+      scale: {x: 12.964142, y: 4.548004, z: 12.964142}
+    - name: Cube.033
+      parentName: WillTheFree(Clone)
+      position: {x: -0.8078076, y: 9.09956, z: 1.5343664}
+      rotation: {x: -0.7071067, y: -0.000000030908616, z: 0.000000030908623, w: 0.7071068}
+      scale: {x: 12.964142, y: 4.548004, z: 12.964142}
+    - name: Cube.034
+      parentName: WillTheFree(Clone)
+      position: {x: -0.6323132, y: 9.040445, z: 1.5308414}
+      rotation: {x: -0.7071067, y: -0.000000030908616, z: 0.000000030908623, w: 0.7071068}
+      scale: {x: 12.964142, y: 4.548004, z: 12.964142}
+    - name: Cube.035
+      parentName: WillTheFree(Clone)
+      position: {x: -0.48545203, y: 8.989645, z: 1.5419608}
+      rotation: {x: -0.7071067, y: -0.000000030908616, z: 0.000000030908623, w: 0.7071068}
+      scale: {x: 12.964142, y: 4.548004, z: 12.964142}
+    - name: Cube.036
+      parentName: WillTheFree(Clone)
+      position: {x: -0.14739433, y: 8.982994, z: 1.5651574}
+      rotation: {x: -0.7071067, y: -0.000000030908616, z: 0.000000030908623, w: 0.7071068}
+      scale: {x: 12.964142, y: 4.548004, z: 12.964142}
+    - name: Cube.037
+      parentName: WillTheFree(Clone)
+      position: {x: -0.3174161, y: 9.292267, z: 1.7309506}
+      rotation: {x: -0.7071067, y: -0.000000030908616, z: 0.000000030908623, w: 0.7071068}
+      scale: {x: 15.210387, y: 15.210387, z: 15.210387}
+    - name: Cube.038
+      parentName: WillTheFree(Clone)
+      position: {x: -0, y: 6.8059516, z: 0.72070974}
+      rotation: {x: -0.7071067, y: -0.000000030908616, z: 0.000000030908623, w: 0.7071068}
+      scale: {x: 100, y: 100, z: 100}
+    - name: Cube.039
+      parentName: WillTheFree(Clone)
+      position: {x: -0.0013512614, y: 9.097967, z: 1.0966767}
+      rotation: {x: -0.7071067, y: -0.000000030908616, z: 0.000000030908623, w: 0.7071068}
+      scale: {x: 100, y: 100, z: 100}
+    - name: Cube.040
+      parentName: WillTheFree(Clone)
+      position: {x: -0.0013512614, y: 9.097967, z: 1.0966767}
+      rotation: {x: -0.7071067, y: -0.000000030908616, z: 0.000000030908623, w: 0.7071068}
+      scale: {x: 100, y: 100, z: 100}
+    - name: Cylinder.001
+      parentName: WillTheFree(Clone)
+      position: {x: -0.09321496, y: 9.845319, z: 0.9186105}
+      rotation: {x: -0.09985122, y: 0.7900987, z: 0.6000198, w: -0.07582939}
+      scale: {x: -100, y: -100, z: -7.8004007}
+    - name: Plane.001
+      parentName: WillTheFree(Clone)
+      position: {x: -0, y: 5.3532004, z: 0.72070974}
+      rotation: {x: 1, y: 0.00000004371139, z: 1.066365e-15, w: 0.000000021855694}
+      scale: {x: 100, y: 4.853016, z: 100}
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    globalScale: 1
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+    hasExtraRoot: 1
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
+  animationType: 2
+  humanoidOversampling: 1
+  avatarSetup: 1
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 1
+  importBlendShapeDeformPercent: 1
+  remapMaterialsIfMaterialImportModeIsNone: 0
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

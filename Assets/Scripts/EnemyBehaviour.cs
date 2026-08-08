@@ -8,6 +8,9 @@ public class EnemyBehaviour : MonoBehaviour
 
     public State state;
 
+    [SerializeField] string[] walkAnimVariantNames;
+    string walkAnimName;
+
     public enum State
     {
         Idle,
@@ -52,7 +55,8 @@ public class EnemyBehaviour : MonoBehaviour
     {
         OnSpawn();
     }
-    private void Update()
+
+    private void FixedUpdate()
     {
         UpdateState();
 
@@ -74,12 +78,12 @@ public class EnemyBehaviour : MonoBehaviour
                 }
                 break;
             case State.Attack:
-                Attack();
                 if (Player != null)
                 {
                     Vector3 directionToPlayer = (Player.transform.position - transform.position).normalized;
                     RotateTo(directionToPlayer);
                 }
+                InitAttack();
                 break;
         }
     }
@@ -87,6 +91,11 @@ public class EnemyBehaviour : MonoBehaviour
     public void OnSpawn()
     {
         animator = GetComponentInChildren<Animator>();
+        if (walkAnimVariantNames.Length != 0)
+        {
+            walkAnimName = walkAnimVariantNames[Random.Range(0, walkAnimVariantNames.Length)];
+            animator.Play(walkAnimName);
+        }
         path = new NavMeshPath();
         hasArrived = false;
     }
@@ -99,6 +108,7 @@ public class EnemyBehaviour : MonoBehaviour
             yield return new WaitForSeconds(rand);
         }
     }
+
     void UpdateState()
     {
         if (IsTargetInReachForAttack() || isAttacking)
@@ -138,7 +148,7 @@ public class EnemyBehaviour : MonoBehaviour
             float smoothRotation = Mathf.LerpAngle(transform.eulerAngles.y, targetRotation, rotationSpeed * Time.deltaTime);
 
             if (canRotate)
-                transform.rotation = Quaternion.Euler(transform.eulerAngles.x, smoothRotation, transform.eulerAngles.z);
+                rb.MoveRotation(Quaternion.Euler(transform.eulerAngles.x, smoothRotation, transform.eulerAngles.z));
         }
     }
 
@@ -159,27 +169,26 @@ public class EnemyBehaviour : MonoBehaviour
         }
     }
 
-    void Attack()
+    void InitAttack()
     {
         if (!isAttacking)
         {
             isAttacking = true;
-            float transitionTime = 0.1f;
-            animator.CrossFade("Attack", transitionTime, 0);
-            StartCoroutine(CaptureAttackLength(transitionTime));
+            animator.Play("Attack");
+            animator.Update(0.0f);
+            StartCoroutine(Attack());
         }
     }
 
-    IEnumerator CaptureAttackLength(float transitionTime)
+    IEnumerator Attack()
     {
-        yield return new WaitForSeconds(transitionTime);
         maxAnimTimer = animator.GetCurrentAnimatorStateInfo(0).length;
         while (isAttacking)
         {
             currentAnimTimer += Time.deltaTime;
             if (currentAnimTimer >= maxAnimTimer)
             {
-                animator.CrossFade("Walking", 0.1f, 0);
+                animator.Play(walkAnimName);
                 currentAnimTimer = 0f;
                 isAttacking = false;
             }

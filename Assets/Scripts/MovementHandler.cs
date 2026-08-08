@@ -3,86 +3,123 @@ using UnityEngine;
 public class MovementHandler : MonoBehaviour
 {
     [Header("Movement")]
-    public float moveSpeed;
+    public float walkSpeed;
+    public float sprintSpeed;
+    public float targetSpeed;
     public float groundDrag;
 
     public float jumpForce;
     public float jumpCooldown;
     public float airMultiplier;
     [SerializeField] bool readyToJump = true;
+    [SerializeField] bool isSprinting = false;
 
     public Transform orientation;
-
-    float horizontalInput;
-    float verticalInput;
 
     Vector3 moveDirection;
 
     public Rigidbody rb;
+    public CapsuleCollider capsuleCollider;
 
     [SerializeField] Animator animator;
 
+    enum AnimationState
+    {
+        Falling,
+        Sprint,
+        Walk,
+        Idle
+    }
+
+    [SerializeField] AnimationState state;
+
     [Header("Ground Check")]
-    public LayerMask whatIsGround;
-    [SerializeField] bool grounded;
+    public LayerMask groundLayer;
+    [SerializeField] bool isGrounded;
 
     public void OnSpawn()
     {
+        capsuleCollider = GetComponent<CapsuleCollider>();
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
 
         InputHandler.instance.OnJump += Jump;
+        InputHandler.instance.OnSprint += OnSprint;
+        InputHandler.instance.OnSprintCancel += OnSprintCancel;
     }
+
     private void Awake()
     {
         OnSpawn();
     }
     private void Update()
     {
-        grounded = Physics.Raycast(transform.position + Vector3.up, Vector3.down, 1.1f, whatIsGround);
-
-        Input();
-        SpeedControl();
-
-        if (grounded)
-            rb.linearDamping = groundDrag;
-        else
-            rb.linearDamping = 0;
+        UpdateAnimationState();
     }
+
+    private void UpdateAnimationState()
+    {
+        targetSpeed = 0.0f;
+        if (!isGrounded)
+        {
+            state = AnimationState.Falling;
+        }
+        else if (isSprinting && InputHandler.instance.moveInputValue.magnitude != 0.0f)
+        {
+            state = AnimationState.Sprint;
+            targetSpeed = sprintSpeed;
+        }
+        else if (InputHandler.instance.moveInputValue.magnitude != 0.0f)
+        {
+            state = AnimationState.Walk;
+            targetSpeed = walkSpeed;
+        }
+        else
+        {
+            state = AnimationState.Idle;
+        }
+    }
+
     private void FixedUpdate()
     {
         MovePlayer();
     }
-    private void Input()
+
+    private void OnSprint()
     {
-        horizontalInput = InputHandler.instance.moveInputValue.x;
-        verticalInput = InputHandler.instance.moveInputValue.y;
+        isSprinting = true;
     }
+    private void OnSprintCancel()
+    {
+        isSprinting = false;
+    }
+
     private void MovePlayer()
     {
+        float horizontalInput = InputHandler.instance.moveInputValue.x;
+        float verticalInput = InputHandler.instance.moveInputValue.y;
         moveDirection = transform.forward * verticalInput + transform.right * horizontalInput;
+        moveDirection.Normalize();
 
-        if (grounded)
-            rb.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
-        else
-            rb.AddForce(moveDirection.normalized * moveSpeed * 10f * airMultiplier, ForceMode.Force);
-    }
-    private void SpeedControl()
-    {
-        Vector3 flatVel = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
+        animator.SetFloat("Moving", targetSpeed / sprintSpeed);
 
-        animator.SetFloat("Move", flatVel.magnitude / moveSpeed);
-
-        if (flatVel.magnitude > moveSpeed)
+        RaycastHit hitInfo;
+        isGrounded = Physics.SphereCast(transform.position + Vector3.up * (.5f - 0.02f), capsuleCollider.radius, Vector3.down, out hitInfo, capsuleCollider.radius, groundLayer);
+        if (isGrounded)
         {
-            Vector3 limitedVel = flatVel.normalized * moveSpeed;
-            rb.linearVelocity = new Vector3(limitedVel.x, rb.linearVelocity.y, limitedVel.z);
+            rb.linearDamping = groundDrag;
+            rb.AddForce((moveDirection * targetSpeed) * Time.fixedDeltaTime);
+        }
+        else
+        {
+            rb.linearDamping = 0;
+            rb.AddForce((moveDirection * targetSpeed * airMultiplier) * Time.fixedDeltaTime);
         }
     }
 
     private void Jump()
     {
-        if (grounded && readyToJump)
+        if (isGrounded && readyToJump)
         {
             readyToJump = false;
 
@@ -96,5 +133,12 @@ public class MovementHandler : MonoBehaviour
     private void ResetJump()
     {
         readyToJump = true;
+    }
+    private void OnDrawGizmos()
+    {
+        RaycastHit hitInfo;
+        isGrounded = Physics.SphereCast(transform.position + Vector3.up * (.5f - 0.02f), capsuleCollider.radius, Vector3.down, out hitInfo, capsuleCollider.radius, groundLayer);
+        Gizmos.color = isGrounded ? Color.green : Color.red;
+        Gizmos.DrawWireSphere(transform.position + Vector3.up * (capsuleCollider.radius - 0.02f), capsuleCollider.radius);
     }
 }

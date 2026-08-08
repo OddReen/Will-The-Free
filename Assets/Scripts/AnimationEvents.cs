@@ -2,23 +2,19 @@ using UnityEngine;
 
 public class AnimationEvents : MonoBehaviour
 {
-    EnemyBehaviour enemyBehaviour;
-
-    [SerializeField] AudioClip[] steps;
-    [SerializeField] Transform stepPos;
-
-    private void Awake()
-    {
-        enemyBehaviour = GetComponentInParent<EnemyBehaviour>();
-    }
-
     public void Steps()
     {
-        SoundFXManager.instance.TriggerRandomSoundFX(SoundFXManager.SoundCategory.Footstep, stepPos, 1, true);
+        SoundFXManager.instance.TriggerRandomSoundFX(SoundFXManager.SoundCategory.Footstep, transform, 1, true);
     }
 
     public void OnAttackAnimEvent()
     {
+        EnemyBehaviour enemyBehaviour = GetComponentInParent<EnemyBehaviour>();
         enemyBehaviour.OnAttackAnimEvent();
+    }
+    public void OnAbilityEvent()
+    {
+        AbilityWheel abilityWheel = GetComponentInParent<AbilityWheel>();
+        abilityWheel.OnAbilityEvent();
     }
 }

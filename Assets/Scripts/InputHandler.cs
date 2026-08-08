@@ -12,12 +12,17 @@ public class InputHandler : MonoBehaviour
     public Vector2 lookInputValue;
     public Action OnInGameMenu;
     public Action OnJump;
-    public Action OnShootDown;
+    public Action OnExecuteAbility;
+    public Action OnCancelAbility;
     public Action OnShootUp;
-    public Action OnReload;
+    public Action OnExecuteReload;
     public Action OnAim;
     public Action OnStopAim;
     public Action OnInteract;
+    public Action OnAbilityWheel;
+    public Action OnAbilityWheelCancel;
+    public Action OnSprint;
+    public Action OnSprintCancel;
 
     private void Awake()
     {
@@ -34,6 +39,12 @@ public class InputHandler : MonoBehaviour
 
         action.Enable();
 
+        action.Player.Sprint.performed += Sprint_performed;
+        action.Player.Sprint.canceled += Sprint_canceled;
+
+        action.Player.AbilityWheel.performed += AbilityWheel_performed;
+        action.Player.AbilityWheel.canceled += AbilityWheel_canceled;
+
         action.Player.InGameMenu.performed += InGameMenu_performed;
         action.Player.InGameMenu.canceled += InGameMenu_canceled;
 
@@ -46,8 +57,8 @@ public class InputHandler : MonoBehaviour
         action.Player.Jump.performed += Jump_performed;
         action.Player.Jump.canceled += Jump_canceled;
 
-        action.Player.Shoot.performed += Shoot_performed;
-        action.Player.Shoot.canceled += Shoot_canceled;
+        action.Player.Shoot.performed += Ability_performed;
+        action.Player.Shoot.canceled += Ability_canceled;
 
         action.Player.Reload.performed += Reload_performed;
         action.Player.Reload.canceled += Reload_canceled;
@@ -57,6 +68,25 @@ public class InputHandler : MonoBehaviour
 
         action.Player.Interact.performed += Interact_performed;
         action.Player.Interact.canceled += Interact_canceled;
+    }
+
+    private void Sprint_canceled(InputAction.CallbackContext context)
+    {
+        OnSprintCancel?.Invoke();
+    }
+
+    private void Sprint_performed(InputAction.CallbackContext context)
+    {
+        OnSprint?.Invoke();
+    }
+
+    private void AbilityWheel_canceled(InputAction.CallbackContext context)
+    {
+        OnAbilityWheelCancel?.Invoke();
+    }
+    private void AbilityWheel_performed(InputAction.CallbackContext context)
+    {
+        OnAbilityWheel?.Invoke();
     }
 
     private void InGameMenu_canceled(InputAction.CallbackContext context)
@@ -100,13 +130,13 @@ public class InputHandler : MonoBehaviour
     {
         OnJump?.Invoke();
     }
-    private void Shoot_canceled(InputAction.CallbackContext context)
+    private void Ability_canceled(InputAction.CallbackContext context)
     {
-        OnShootUp?.Invoke();
+        OnCancelAbility?.Invoke();
     }
-    private void Shoot_performed(InputAction.CallbackContext context)
+    private void Ability_performed(InputAction.CallbackContext context)
     {
-        OnShootDown?.Invoke();
+        OnExecuteAbility?.Invoke();
     }
     private void Reload_canceled(InputAction.CallbackContext context)
     {
@@ -114,7 +144,7 @@ public class InputHandler : MonoBehaviour
     }
     private void Reload_performed(InputAction.CallbackContext context)
     {
-        OnReload?.Invoke();
+        OnExecuteReload?.Invoke();
     }
     private void Aim_performed(InputAction.CallbackContext context)
     {
@@ -138,8 +168,8 @@ public class InputHandler : MonoBehaviour
         action.Player.Jump.performed -= Jump_performed;
         action.Player.Jump.canceled -= Jump_canceled;
 
-        action.Player.Shoot.performed -= Shoot_performed;
-        action.Player.Shoot.canceled -= Shoot_canceled;
+        action.Player.Shoot.performed -= Ability_performed;
+        action.Player.Shoot.canceled -= Ability_canceled;
 
         action.Player.Aim.performed -= Aim_performed;
         action.Player.Aim.canceled -= Aim_canceled;

@@ -1,12 +1,17 @@
 using System.Collections;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
+    [SerializeField] int enemyAmount;
+    [SerializeField] int enemyIncrementation;
+    [SerializeField] float enemySpawningInterval;
+    [SerializeField] float waveInterval;
+    [SerializeField] bool waveEnabled;
+
     public static GameManager instance;
 
     public GameObject player;
@@ -53,6 +58,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject enemyPref;
     [SerializeField] Transform[] spawns;
 
+    [Header("Ability Wheel")]
+    [SerializeField] public Transform arrow;
+    [SerializeField] public Transform abilityWheel;
+
     private void Start()
     {
         if (instance == null)
@@ -63,13 +72,17 @@ public class GameManager : MonoBehaviour
         restart.onClick.AddListener(OnRestart);
         quit.onClick.AddListener(OnQuit);
         player = Instantiate(player, playerSpawn.position, Quaternion.identity);
-        StartWave();
+        if (waveEnabled)
+        {
+            StartWave();
+        }
     }
 
     public void InGameMenu()
     {
         inGameMenu.SetActive(!inGameMenu.activeSelf);
         Time.timeScale = inGameMenu.activeSelf ? 0.0f : 1.0f;
+        Cursor.lockState = inGameMenu.activeSelf ? CursorLockMode.None : CursorLockMode.Locked;
     }
 
     public void HealthBarUpdate(float InCurrentHealth, float InMaxHealth)
@@ -101,7 +114,7 @@ public class GameManager : MonoBehaviour
 
     IEnumerator WaveInterval()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(waveInterval);
         StartWave();
     }
 
@@ -114,13 +127,13 @@ public class GameManager : MonoBehaviour
 
     IEnumerator SpawnWave()
     {
-        maxEnemies += 5;
-        currentEnemies = maxEnemies;
-        for (int i = 0; i < maxEnemies; i++)
+        enemyAmount += enemyIncrementation;
+        currentEnemies = enemyAmount;
+        for (int i = 0; i < enemyAmount; i++)
         {
             int RandomSpawn = Random.Range(0, spawns.Length);
             GameObject NewEnemy = Instantiate(enemyPref, spawns[RandomSpawn].position, Quaternion.identity);
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(enemySpawningInterval);
         }
     }
 

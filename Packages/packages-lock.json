@@ -92,14 +92,13 @@
       }
     },
     "com.unity.formats.fbx": {
-      "version": "5.1.6",
+      "version": "file:com.unity.formats.fbx",
       "depth": 0,
-      "source": "registry",
+      "source": "embedded",
       "dependencies": {
-        "com.autodesk.fbx": "5.1.3",
-        "com.unity.timeline": "1.7.1"
-      },
-      "url": "https://packages.unity.com"
+        "com.unity.timeline": "1.7.1",
+        "com.autodesk.fbx": "5.1.3"
+      }
     },
     "com.unity.ide.rider": {
       "version": "3.0.40",

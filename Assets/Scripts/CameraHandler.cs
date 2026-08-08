@@ -10,6 +10,8 @@ public class CameraHandler : MonoBehaviour
 
     public Transform orientation;
 
+    public bool canRotate = true;
+
     private void Awake()
     {
         OnSpawn();
@@ -26,13 +28,16 @@ public class CameraHandler : MonoBehaviour
     }
     void Rotation()
     {
-        float moveX = InputHandler.instance.lookInputValue.x * Time.deltaTime * sensibility;
-        float Yaw = GetComponent<Rigidbody>().rotation.eulerAngles.y + moveX;
-        GetComponent<Rigidbody>().MoveRotation(Quaternion.Euler(0, Yaw, 0));
+        if (canRotate)
+        {
+            float moveX = InputHandler.instance.lookInputValue.x * Time.deltaTime * sensibility;
+            float Yaw = GetComponent<Rigidbody>().rotation.eulerAngles.y + moveX;
+            GetComponent<Rigidbody>().MoveRotation(Quaternion.Euler(0, Yaw, 0));
 
-        float moveY = InputHandler.instance.lookInputValue.y * Time.deltaTime * sensibility;
-        float Pitch = orientation.localRotation.eulerAngles.x - moveY;
-        //Pitch = Mathf.Clamp(Pitch, -90f, 90f);
-        orientation.localRotation = Quaternion.Euler(Pitch, 0, 0);
+            float moveY = InputHandler.instance.lookInputValue.y * Time.deltaTime * sensibility;
+            float Pitch = orientation.localRotation.eulerAngles.x - moveY;
+            //Pitch = Mathf.Clamp(Pitch, -90f, 90f);
+            orientation.localRotation = Quaternion.Euler(Pitch, 0, 0);
+        }
     }
 }
