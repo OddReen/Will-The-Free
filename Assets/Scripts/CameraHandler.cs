@@ -4,7 +4,8 @@ using UnityEngine;
 public class CameraHandler : MonoBehaviour
 {
     public CinemachineCamera cinemachineCamera;
-    Rigidbody rb;
+    //Rigidbody rb;
+    CharacterController characterController;
 
     [SerializeField, Range(0, 100)]
     public float sensibility = 25;
@@ -22,7 +23,7 @@ public class CameraHandler : MonoBehaviour
     }
     public void OnSpawn()
     {
-        rb = GetComponent<Rigidbody>();
+        //rb = GetComponent<Rigidbody>();
         cinemachineCamera.transform.SetParent(null, false);
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -38,7 +39,8 @@ public class CameraHandler : MonoBehaviour
         if (canRotate)
         {
             yRotation += InputHandler.instance.lookInputValue.x * Time.deltaTime * sensibility;
-            rb.MoveRotation(Quaternion.Euler(0, yRotation, 0));
+            //rb.MoveRotation(Quaternion.Euler(0, yRotation, 0));
+            transform.localRotation = Quaternion.Euler(0, yRotation, 0);
 
             xRotation -= InputHandler.instance.lookInputValue.y * Time.deltaTime * sensibility;
             xRotation = Mathf.Clamp(xRotation, -89.0f, 89.0f);

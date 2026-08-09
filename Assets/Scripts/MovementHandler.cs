@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class MovementHandler : MonoBehaviour
@@ -8,7 +9,21 @@ public class MovementHandler : MonoBehaviour
     public float targetSpeed;
     public float groundDrag;
 
-    public float jumpForce;
+    public Vector3 lastVelocity;
+    public Vector3 currentVelocity;
+
+    public Vector3 playerVelocity;
+
+    public float movingAlpha = 0.0f;
+    public float alphaMultiplier = 0.0f;
+    public float gravity = -9.84f;
+    public float currentFallSpeed = 0.0f;
+    public float maxFallSpeed = 9.8f;
+
+    public float currentDamp;
+    public float dampForce;
+
+    public float jumpHeight = 1.5f;
     public float jumpCooldown;
     public float airMultiplier;
     [SerializeField] bool readyToJump = true;
@@ -20,6 +35,7 @@ public class MovementHandler : MonoBehaviour
 
     public Rigidbody rb;
     public CapsuleCollider capsuleCollider;
+    public CharacterController characterController;
 
     [SerializeField] Animator animator;
 
@@ -35,13 +51,14 @@ public class MovementHandler : MonoBehaviour
 
     [Header("Ground Check")]
     public LayerMask groundLayer;
-    [SerializeField] bool isGrounded;
+    //[SerializeField] bool isGrounded;
 
     public void OnSpawn()
     {
         capsuleCollider = GetComponent<CapsuleCollider>();
-        rb = GetComponent<Rigidbody>();
-        rb.freezeRotation = true;
+        characterController = GetComponent<CharacterController>();
+        //rb = GetComponent<Rigidbody>();
+        //rb.freezeRotation = true;
 
         InputHandler.instance.OnJump += Jump;
         InputHandler.instance.OnSprint += OnSprint;
@@ -55,24 +72,22 @@ public class MovementHandler : MonoBehaviour
     private void Update()
     {
         UpdateAnimationState();
+        MovePlayerCC();
     }
 
     private void UpdateAnimationState()
     {
-        targetSpeed = 0.0f;
-        if (!isGrounded)
+        if (!characterController.isGrounded)
         {
             state = AnimationState.Falling;
         }
         else if (isSprinting && InputHandler.instance.moveInputValue.magnitude != 0.0f)
         {
             state = AnimationState.Sprint;
-            targetSpeed = sprintSpeed;
         }
         else if (InputHandler.instance.moveInputValue.magnitude != 0.0f)
         {
             state = AnimationState.Walk;
-            targetSpeed = walkSpeed;
         }
         else
         {
@@ -82,7 +97,7 @@ public class MovementHandler : MonoBehaviour
 
     private void FixedUpdate()
     {
-        MovePlayer();
+        //MovePlayer();
     }
 
     private void OnSprint()
@@ -96,49 +111,100 @@ public class MovementHandler : MonoBehaviour
 
     private void MovePlayer()
     {
-        float horizontalInput = InputHandler.instance.moveInputValue.x;
-        float verticalInput = InputHandler.instance.moveInputValue.y;
-        moveDirection = transform.forward * verticalInput + transform.right * horizontalInput;
-        moveDirection.Normalize();
+        //float horizontalInput = InputHandler.instance.moveInputValue.x;
+        //float verticalInput = InputHandler.instance.moveInputValue.y;
+        //moveDirection = transform.forward * verticalInput + transform.right * horizontalInput;
+        //moveDirection.Normalize();
 
-        animator.SetFloat("Moving", targetSpeed / sprintSpeed);
+        //animator.SetFloat("Moving", targetSpeed / sprintSpeed);
 
-        RaycastHit hitInfo;
-        isGrounded = Physics.SphereCast(transform.position + Vector3.up * (.5f - 0.02f), capsuleCollider.radius, Vector3.down, out hitInfo, capsuleCollider.radius, groundLayer);
+        //RaycastHit hitInfo;
+        //isGrounded = Physics.SphereCast(transform.position + Vector3.up * (.5f - 0.02f), capsuleCollider.radius, Vector3.down, out hitInfo, capsuleCollider.radius, groundLayer);
+        //if (isGrounded)
+        //{
+        //    rb.linearDamping = groundDrag;
+        //    rb.AddForce((moveDirection * targetSpeed) * Time.deltaTime);
+        //}
+        //else
+        //{
+        //    rb.linearDamping = 0;
+        //    rb.AddForce((moveDirection * targetSpeed * airMultiplier) * Time.deltaTime);
+        //}
+    }
+    private void MovePlayerCC()
+    {
+        targetSpeed = 0.0f;
+        switch (state)
+        {
+            case AnimationState.Falling:
+                targetSpeed = walkSpeed;
+                break;
+            case AnimationState.Sprint:
+                targetSpeed = sprintSpeed;
+                break;
+            case AnimationState.Walk:
+                targetSpeed = walkSpeed;
+                break;
+            case AnimationState.Idle:
+                break;
+            default:
+                break;
+        }
+
+        bool isGrounded = characterController.isGrounded;
         if (isGrounded)
         {
-            rb.linearDamping = groundDrag;
-            rb.AddForce((moveDirection * targetSpeed) * Time.deltaTime);
+            if (playerVelocity.y < -2f)
+            {
+                playerVelocity.y = -2f;
+            }
         }
-        else
-        {
-            rb.linearDamping = 0;
-            rb.AddForce((moveDirection * targetSpeed * airMultiplier) * Time.deltaTime);
-        }
+
+        playerVelocity.y += gravity * Time.deltaTime;
+
+        float HorizontalInput = InputHandler.instance.moveInputValue.x;
+        float VerticalInput = InputHandler.instance.moveInputValue.y;
+        Vector3 WorldDirection = new Vector3(HorizontalInput, 0.0f, VerticalInput);
+        moveDirection = (transform.TransformDirection(WorldDirection)).normalized;
+
+        float Alpha = characterController.velocity.magnitude / sprintSpeed;
+        movingAlpha = Mathf.Lerp(movingAlpha, Alpha, Time.deltaTime * alphaMultiplier);
+
+        animator.SetFloat("Moving", movingAlpha);
+
+        Vector3 finalMove = moveDirection * targetSpeed + Vector3.up * playerVelocity.y;
+        characterController.Move(finalMove * Time.deltaTime);
     }
 
     private void Jump()
     {
-        if (isGrounded && readyToJump)
+        if (characterController.isGrounded)
         {
-            readyToJump = false;
-
-            rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
-
-            rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
-
-            Invoke(nameof(ResetJump), jumpCooldown);
+            playerVelocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
         }
     }
+    //private void Jump()
+    //{
+        //if (isGrounded && readyToJump)
+        //{
+        //    readyToJump = false;
+
+        //    rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
+
+        //    rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+
+        //    Invoke(nameof(ResetJump), jumpCooldown);
+        //}
+    //}
     private void ResetJump()
     {
         readyToJump = true;
     }
     private void OnDrawGizmos()
     {
-        RaycastHit hitInfo;
-        isGrounded = Physics.SphereCast(transform.position + Vector3.up * (.5f - 0.02f), capsuleCollider.radius, Vector3.down, out hitInfo, capsuleCollider.radius, groundLayer);
-        Gizmos.color = isGrounded ? Color.green : Color.red;
-        Gizmos.DrawWireSphere(transform.position + Vector3.up * (capsuleCollider.radius - 0.02f), capsuleCollider.radius);
+        //RaycastHit hitInfo;
+        //isGrounded = Physics.SphereCast(transform.position + Vector3.up * (.5f - 0.02f), capsuleCollider.radius, Vector3.down, out hitInfo, capsuleCollider.radius, groundLayer);
+        //Gizmos.color = isGrounded ? Color.green : Color.red;
+        //Gizmos.DrawWireSphere(transform.position + Vector3.up * (capsuleCollider.radius - 0.02f), capsuleCollider.radius);
     }
 }

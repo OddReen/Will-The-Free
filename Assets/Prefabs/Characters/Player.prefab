@@ -41,7 +41,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2778118483430638530}
-  - component: {fileID: 5182594787103755796}
+  - component: {fileID: 7921845648616733200}
   - component: {fileID: 6681561814405476311}
   - component: {fileID: 4866565495195154803}
   - component: {fileID: 8759055556667570004}
@@ -73,33 +73,31 @@ Transform:
   - {fileID: 1857657654295255346}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!54 &5182594787103755796
-Rigidbody:
+--- !u!143 &7921845648616733200
+CharacterController:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1084693315158143946}
-  serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 1
-  m_Constraints: 112
-  m_CollisionDetection: 1
+  m_LayerOverridePriority: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Height: 2
+  m_Radius: 0.25
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!136 &6681561814405476311
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -115,7 +113,7 @@ CapsuleCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
@@ -150,24 +148,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01508e93dd090ff4b8ba4bc5d1a470e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  walkSpeed: 3000
-  sprintSpeed: 6000
+  walkSpeed: 7
+  sprintSpeed: 12
   targetSpeed: 0
   groundDrag: 5
-  jumpForce: 5
+  lastVelocity: {x: 0, y: 0, z: 0}
+  currentVelocity: {x: 0, y: 0, z: 0}
+  playerVelocity: {x: 0, y: 0, z: 0}
+  movingAlpha: 5
+  alphaMultiplier: 5
+  gravity: -9.84
+  currentFallSpeed: 0
+  maxFallSpeed: 120
+  currentDamp: 0
+  dampForce: 0.1
+  jumpHeight: 1.5
   jumpCooldown: 0.25
   airMultiplier: 1
   readyToJump: 1
   isSprinting: 0
   orientation: {fileID: 5329949693671627704}
-  rb: {fileID: 5182594787103755796}
+  rb: {fileID: 0}
   capsuleCollider: {fileID: 6681561814405476311}
+  characterController: {fileID: 0}
   animator: {fileID: 8147786501687648810}
   state: 0
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
-  isGrounded: 1
 --- !u!114 &2221403275139898328
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -294,15 +302,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Ability_Spit
   abilityData:
-    damage: 35
+    damage: 1000
     knockback: 0
     inCooldown: 0
     cooldownTimer: 0
     isReloading: 0
     isAutomatic: 0
-    reloadTime: 0.5
+    reloadTime: 0
     ammoAmount: 0
-    magazineSize: 3
+    magazineSize: 1000
     projectileSpeed: 100
     recoil: 0
   abilityHUD:
@@ -531,7 +539,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Ability_Punch
   abilityData:
-    damage: 33
+    damage: 1000
     knockback: 0
     inCooldown: 0
     cooldownTimer: 0

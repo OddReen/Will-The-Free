@@ -1,9 +1,8 @@
-
 using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class WillTheFreeBehaviour : MonoBehaviour
+public class EnemyBehaviour_NavAgent : MonoBehaviour
 {
     [SerializeField] AudioClip[] moans;
 
@@ -16,7 +15,7 @@ public class WillTheFreeBehaviour : MonoBehaviour
     {
         Idle,
         Chase,
-        Wandering
+        Attack
     }
 
     [Header("Bool")]
@@ -71,11 +70,10 @@ public class WillTheFreeBehaviour : MonoBehaviour
                 currentTargetSpeed = movementSpeed;
                 if (Player != null)
                 {
-                    //animator.Play("");
                     MoveTo(Player.transform.position);
                 }
                 break;
-            case State.Wandering:
+            case State.Attack:
                 if (Player != null)
                 {
                     Vector3 directionToPlayer = (Player.transform.position - transform.position).normalized;
@@ -109,7 +107,11 @@ public class WillTheFreeBehaviour : MonoBehaviour
 
     void UpdateState()
     {
-        if (CanMove())
+        if (IsTargetInReachForAttack() || isAttacking)
+        {
+            state = State.Attack;
+        }
+        else if (CanMove())
         {
             state = State.Chase;
         }
@@ -119,11 +121,11 @@ public class WillTheFreeBehaviour : MonoBehaviour
         }
     }
 
-    void MoveTo(Vector3 InTarget)
+    void MoveTo(Vector3 targetDirection)
     {
         if (canMove)
         {
-            agent.SetDestination(InTarget);
+            agent.SetDestination(targetDirection);
         }
     }
 
@@ -190,26 +192,27 @@ public class WillTheFreeBehaviour : MonoBehaviour
         state = newAction;
     }
 
-    float timer;
-    //void WanderingAround()
-    //{
-    //    if (hasArrived)
-    //    {
-    //        timer += Time.deltaTime;
-    //        if (changedState)
-    //        {
-    //            currentWaitTime = Random.Range(maxMinWaitTime.x, maxMinWaitTime.y);
-    //        }
-    //        if (timer >= currentWaitTime)
-    //        {
-    //            currentWaitTime = Random.Range(maxMinWaitTime.x, maxMinWaitTime.y);
-    //            timer = 0;
+    void CalculatePathTo(Vector3 InDestination)
+    {
+        // Update Destination
+        NavMeshHit hit;
+        bool isValid = NavMesh.SamplePosition(InDestination, out hit, 100.0f, NavMesh.AllAreas);
+        if (isValid)
+        {
+            Vector3 destination = hit.position;
 
-    //            int randWanderingPointIndex = Random.Range(0, wanderingPoints.Length);
-    //            wanderingDestination = wanderingPoints[randWanderingPointIndex].position;
-    //        }
-    //    }
-    //}
+            // Not arrived? Then recalculate path
+            if (!hasArrived)
+            {
+                pathFound = NavMesh.CalculatePath(transform.position, destination, -1, path);
+                hasArrived = path.corners.Length >= 2 && Vector3.Distance(transform.position, destination) < stoppingThreshold;
+            }
+            else
+            {
+            hasArrived = false;
+            }
+        }
+    }
 
     private void OnDrawGizmosSelected()
     {
