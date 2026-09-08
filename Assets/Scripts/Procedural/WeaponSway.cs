@@ -9,43 +9,41 @@ public class WeaponSway : MonoBehaviour
     [SerializeField] private float maxAngle = 45f;
 
     [Header("Sway With Movement")]
-    [SerializeField] MovementHandler movementHandler;
+    [SerializeField] Character_Player movementHandler;
 
     private void Awake()
     {
-        movementHandler = GetComponentInParent<MovementHandler>();
+        movementHandler = GetComponentInParent<Character_Player>();
     }
 
     private void LateUpdate()
     {
         //SwayWithCamera();
-        SwayWithMovement();
+        //SwayWithMovement();
     }
 
-    private void SwayWithMovement()
-    {
-        Debug.Log(movementHandler.rb.linearVelocity);
+    //private void SwayWithMovement()
+    //{
+    //    Vector3 localVelocity = transform.InverseTransformDirection(movementHandler.rb.linearVelocity);
+    //    float moveX = localVelocity.x * multiplier;
+    //    float moveZ = localVelocity.z * multiplier;
 
-        Vector3 localVelocity = transform.InverseTransformDirection(movementHandler.rb.linearVelocity);
-        float moveX = localVelocity.x * multiplier;
-        float moveZ = localVelocity.z * multiplier;
+    //    Quaternion targetRotationX = Quaternion.AngleAxis(moveZ, Vector3.right);
+    //    Quaternion targetRotationZ = Quaternion.AngleAxis(moveX, Vector3.up);
+    //    Quaternion targetRotation = targetRotationX * targetRotationZ;
 
-        Quaternion targetRotationX = Quaternion.AngleAxis(moveZ, Vector3.right);
-        Quaternion targetRotationZ = Quaternion.AngleAxis(moveX, Vector3.up);
-        Quaternion targetRotation = targetRotationX * targetRotationZ;
+    //    Vector3 targetEuler = targetRotation.eulerAngles;
 
-        Vector3 targetEuler = targetRotation.eulerAngles;
+    //    targetEuler.x = (targetEuler.x > 180) ? targetEuler.x - 360 : targetEuler.x;
+    //    targetEuler.z = (targetEuler.z > 180) ? targetEuler.z - 360 : targetEuler.z;
 
-        targetEuler.x = (targetEuler.x > 180) ? targetEuler.x - 360 : targetEuler.x;
-        targetEuler.z = (targetEuler.z > 180) ? targetEuler.z - 360 : targetEuler.z;
+    //    targetEuler.x = Mathf.Clamp(targetEuler.x, -maxAngle, maxAngle);
+    //    targetEuler.z = Mathf.Clamp(targetEuler.z, -maxAngle, maxAngle);
 
-        targetEuler.x = Mathf.Clamp(targetEuler.x, -maxAngle, maxAngle);
-        targetEuler.z = Mathf.Clamp(targetEuler.z, -maxAngle, maxAngle);
+    //    targetRotation = Quaternion.Euler(targetEuler);
 
-        targetRotation = Quaternion.Euler(targetEuler);
-
-        transform.localRotation = Quaternion.Slerp(transform.localRotation, targetRotation, smooth * Time.deltaTime);
-    }
+    //    transform.localRotation = Quaternion.Slerp(transform.localRotation, targetRotation, smooth * Time.deltaTime);
+    //}
 
     private void SwayWithCamera()
     {

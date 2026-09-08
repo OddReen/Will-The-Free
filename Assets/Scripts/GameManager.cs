@@ -1,11 +1,15 @@
 using System.Collections;
 using TMPro;
+using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using static Unity.Cinemachine.CinemachineImpulseDefinition;
 
 public class GameManager : MonoBehaviour
 {
+    public CinemachineCamera cinemachineCamera;
+
     [SerializeField] int enemyAmount;
     [SerializeField] int enemyIncrementation;
     [SerializeField] float enemySpawningInterval;
@@ -15,6 +19,7 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
 
     public GameObject player;
+    public GameObject willTheFree;
 
     enum GameState
     {
@@ -31,8 +36,9 @@ public class GameManager : MonoBehaviour
     [Header("InGameMenu")]
     [SerializeField] GameObject inGameMenu;
 
-    [Header("Player Spawn")]
+    [Header("Spawn Points")]
     [SerializeField] Transform playerSpawn;
+    [SerializeField] Transform willTheFreeSpawn;
 
     [Header("HealthBar")]
     [SerializeField] TextMeshProUGUI textHealthBar;
@@ -72,10 +78,18 @@ public class GameManager : MonoBehaviour
         restart.onClick.AddListener(OnRestart);
         quit.onClick.AddListener(OnQuit);
         player = Instantiate(player, playerSpawn.position, Quaternion.identity);
+        willTheFree = Instantiate(willTheFree, willTheFreeSpawn.position, Quaternion.identity);
         if (waveEnabled)
         {
             StartWave();
         }
+    }
+
+    public void CameraShake(CinemachineImpulseSource impulseSource, float InForce, Vector3 InImpulseDirection, ImpulseShapes InImpulseShape)
+    {
+        impulseSource.DefaultVelocity = InImpulseDirection.normalized;
+        impulseSource.ImpulseDefinition.ImpulseShape = InImpulseShape;
+        impulseSource.GenerateImpulseWithForce(InForce);
     }
 
     public void InGameMenu()

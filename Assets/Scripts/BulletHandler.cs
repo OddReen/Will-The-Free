@@ -30,9 +30,9 @@ public class BulletHandler : MonoBehaviour
                 HealthSystem hitHealthSystem = hit.collider.gameObject.GetComponentInParent<HealthSystem>();
                 if (hitHealthSystem != null)
                 {
-                    hitHealthSystem.TakeDamage(damage);
+                    hitHealthSystem.TakeDamage(damage, hit.point);
                 }
-                Instantiate(ParticleSystemLibrary.instance.bulletHitEffect, hit.point, Quaternion.LookRotation(hit.normal));
+                //Instantiate(ParticleSystemLibrary.instance.bulletHitEffect, hit.point, Quaternion.LookRotation(hit.normal));
                 DestroyBullet();
             }
         }

@@ -11,6 +11,8 @@ public class SoundFXManager : MonoBehaviour
     [SerializeField] private AudioClip[] reloadClips;
     [SerializeField] private AudioClip[] hitClips;
     [SerializeField] private AudioClip[] punchClips;
+    [SerializeField] private AudioClip[] williamArrivingClips;
+    [SerializeField] private AudioClip[] enemyMoans;
 
     public enum SoundCategory
     {
@@ -18,7 +20,9 @@ public class SoundFXManager : MonoBehaviour
         Gunshot,
         Reload,
         Hit,
-        Punch
+        Punch,
+        WilliamArriving,
+        EnemyMoans
     }
 
     private void Awake()
@@ -51,6 +55,12 @@ public class SoundFXManager : MonoBehaviour
             case SoundCategory.Punch:
                 clipArray = punchClips;
                 break;
+            case SoundCategory.WilliamArriving:
+                clipArray = williamArrivingClips;
+                break;
+            case SoundCategory.EnemyMoans:
+                clipArray = enemyMoans;
+                break;
         }
 
         if (clipArray.Length > 0)
@@ -74,9 +84,17 @@ public class SoundFXManager : MonoBehaviour
     {
         AudioSource audioSource = Instantiate(soundFXPrefab, spawnPosition, Quaternion.identity);
 
+        audioSource.loop = false;
         audioSource.clip = clip;
         audioSource.volume = volume;
-        audioSource.spatialBlend = 1;
+
+        audioSource.spatialBlend = 1f;
+        audioSource.spatialize = false;
+
+        audioSource.priority = 200;
+        audioSource.dopplerLevel = 0f;
+        audioSource.pitch = 1f;
+
         audioSource.Play();
 
         Destroy(audioSource.gameObject, clip.length);

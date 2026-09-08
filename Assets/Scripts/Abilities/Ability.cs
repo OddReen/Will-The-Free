@@ -2,27 +2,36 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 
-public abstract class Ability : MonoBehaviour
+[Serializable]
+public abstract class Ability
 {
+    public float cooldown;
+    public bool isPressingAbility;
+    public bool canUpdate;
+
     [Serializable]
-    public struct AbilityData
+    public class AbilityData
     {
+        public string name;
         public float damage;
-        public float knockback;
-        public bool inCooldown;
-        public float cooldownTimer;
-        public bool isReloading;
+
+        public float knockbackForce;
+        public float knockbackDuration;
+
+        public float cooldownTime;
+
         public bool isAutomatic;
         public float reloadTime;
         public int ammoAmount;
         public int magazineSize;
+
         public float projectileSpeed;
         public float recoil;
     };
+
     [Serializable]
-    public struct AbilityHUD
+    public class AbilityHUD
     {
-        public string name;
         public Sprite sprite;
         public Image image;
         public float angle;
@@ -31,28 +40,22 @@ public abstract class Ability : MonoBehaviour
     public AbilityData abilityData;
     public AbilityHUD abilityHUD;
 
-    public virtual void Start()
+    public virtual void Enter(Character_Player player) { }
+    public virtual void Update(Character_Player player) { }
+    public virtual void Exit(Character_Player player) { }
+    public virtual void OnClickUpAbility(Character_Player player) { }
+    public virtual void OnClickDownAbility(Character_Player player) { }
+    public virtual void OnClickDownReload(Character_Player player) { }
+    public virtual void OnAbilityEvent(Character_Player player) { }
+
+    public bool AdvanceTimer(ref float InTimer, float InMaxTimer)
     {
-
-    }
-
-    public virtual void OnCancelAbility()
-    {
-
-    }
-
-    public virtual void OnExecuteAbility()
-    {
-
-    }
-
-    public virtual void OnExecuteReload()
-    {
-
-    }
-
-    public virtual void OnAbilityEvent()
-    {
-
+        InTimer += Time.deltaTime;
+        if (InTimer >= InMaxTimer)
+        {
+            InTimer = 0.0f;
+            return true;
+        }
+        return false;
     }
 }

@@ -27,55 +27,7 @@ ModelImporter:
     removeConstantScaleCurves: 0
     motionNodeName: 
     animationImportErrors: 
-    animationImportWarnings: "\nClip 'rig|Attack' has import animation warnings that
-      might lower retargeting quality:\nNote: Activate translation DOF on avatar
-      to improve retargeting quality.\n\t'DEF-forearm.L' has translation animation
-      that will be discarded.\n\t'DEF-hand.L' has translation animation that will
-      be discarded.\n\t'DEF-forearm.R' has translation animation that will be discarded.\n\t'DEF-hand.R'
-      has translation animation that will be discarded.\n\t'DEF-spine.004' is inbetween
-      humanoid transforms and has rotation animation that will be discarded.\n\nClip
-      'rig|Walk' has import animation warnings that might lower retargeting quality:\nNote:
-      Activate translation DOF on avatar to improve retargeting quality.\n\t'DEF-spine.004'
-      is inbetween humanoid transforms and has rotation animation that will be discarded.\n\t'DEF-shin.L'
-      has translation animation that will be discarded.\n\t'DEF-foot.L' has translation
-      animation that will be discarded.\n\t'DEF-shin.R' has translation animation
-      that will be discarded.\n\t'DEF-foot.R' has translation animation that will
-      be discarded.\n\nClip 'rig|WeirdAttack' has import animation warnings that
-      might lower retargeting quality:\nNote: Activate translation DOF on avatar
-      to improve retargeting quality.\n\t'DEF-forearm.L' has translation animation
-      that will be discarded.\n\t'DEF-hand.L' has translation animation that will
-      be discarded.\n\t'DEF-palm.02.L' is inbetween humanoid transforms and has rotation
-      animation that will be discarded.\n\t'DEF-palm.03.L' is inbetween humanoid
-      transforms and has rotation animation that will be discarded.\n\t'DEF-palm.04.L'
-      is inbetween humanoid transforms and has rotation animation that will be discarded.\n\t'DEF-forearm.R'
-      has translation animation that will be discarded.\n\t'DEF-hand.R' has translation
-      animation that will be discarded.\n\t'DEF-spine.004' is inbetween humanoid
-      transforms and has rotation animation that will be discarded.\n\t'DEF-shin.R'
-      has translation animation that will be discarded.\n\t'DEF-foot.R' has translation
-      animation that will be discarded.\n\nClip 'rig|WeirdWalk_0' has import animation
-      warnings that might lower retargeting quality:\nNote: Activate translation
-      DOF on avatar to improve retargeting quality.\n\t'DEF-forearm.L' has translation
-      animation that will be discarded.\n\t'DEF-hand.L' has translation animation
-      that will be discarded.\n\t'DEF-forearm.R' has translation animation that will
-      be discarded.\n\t'DEF-hand.R' has translation animation that will be discarded.\n\t'DEF-spine.004'
-      is inbetween humanoid transforms and has rotation animation that will be discarded.\n\t'DEF-shin.L'
-      has translation animation that will be discarded.\n\t'DEF-foot.L' has translation
-      animation that will be discarded.\n\t'DEF-shin.R' has translation animation
-      that will be discarded.\n\t'DEF-foot.R' has translation animation that will
-      be discarded.\n\nClip 'rig|WeirdWalk_1' has import animation warnings that
-      might lower retargeting quality:\nNote: Activate translation DOF on avatar
-      to improve retargeting quality.\n\t'DEF-spine.004' is inbetween humanoid transforms
-      and has rotation animation that will be discarded.\n\t'DEF-shin.L' has translation
-      animation that will be discarded.\n\t'DEF-foot.L' has translation animation
-      that will be discarded.\n\t'DEF-shin.R' has translation animation that will
-      be discarded.\n\t'DEF-foot.R' has translation animation that will be discarded.\n\nClip
-      'rig|WeirdWalk_2' has import animation warnings that might lower retargeting
-      quality:\nNote: Activate translation DOF on avatar to improve retargeting quality.\n\t'DEF-spine.004'
-      is inbetween humanoid transforms and has rotation animation that will be discarded.\n\t'DEF-shin.L'
-      has translation animation that will be discarded.\n\t'DEF-foot.L' has translation
-      animation that will be discarded.\n\t'DEF-shin.R' has translation animation
-      that will be discarded.\n\t'DEF-foot.R' has translation animation that will
-      be discarded.\n"
+    animationImportWarnings: 
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
@@ -89,8 +41,8 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: WeirdAttack
-      takeName: rig|WeirdAttack
+      name: rig|WeirdAttack_0
+      takeName: rig|WeirdAttack_0
       internalID: 1023992570608409904
       firstFrame: 0
       lastFrame: 18
@@ -176,7 +128,21 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events: []
+      events:
+      - time: 0
+        functionName: Steps
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.5079294
+        functionName: Steps
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}
@@ -205,7 +171,21 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events: []
+      events:
+      - time: 0
+        functionName: Steps
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.50249213
+        functionName: Steps
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}
@@ -234,7 +214,21 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events: []
+      events:
+      - time: 0
+        functionName: Steps
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.50067973
+        functionName: Steps
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}

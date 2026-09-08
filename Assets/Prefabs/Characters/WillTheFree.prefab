@@ -821,6 +821,37 @@ SkinnedMeshRenderer:
     m_Center: {x: 0.00003386615, y: 0.042533807, z: 0.015984397}
     m_Extent: {x: 0.014000164, y: 0.004913898, z: 0.0042857896}
   m_DirtyAABB: 0
+--- !u!1 &1146946936794836649
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3587990955075341089}
+  m_Layer: 0
+  m_Name: EyesPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3587990955075341089
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1146946936794836649}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0, y: 0.00755, z: 0.00988}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7873638242049706222}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1178919486435955181
 GameObject:
   m_ObjectHideFlags: 0
@@ -849,7 +880,8 @@ Transform:
   m_LocalPosition: {x: -0, y: 0.0035791306, z: -0.0000000017881393}
   m_LocalScale: {x: 1, y: 1, z: 0.99999994}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 3587990955075341089}
   m_Father: {fileID: 4660602996427466559}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1212804988377552064
@@ -4686,7 +4718,7 @@ GameObject:
   - component: {fileID: 9173272196687106427}
   - component: {fileID: 3003389272456514305}
   - component: {fileID: 3121572768175600523}
-  - component: {fileID: 7522273441451323919}
+  - component: {fileID: 1782649079864666077}
   m_Layer: 0
   m_Name: WillTheFree
   m_TagString: Untagged
@@ -4752,7 +4784,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8360320114564844481}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fff0960ef4ea6e04eac66b4a7fd2189d, type: 3}
   m_Name: 
@@ -4763,7 +4795,7 @@ MonoBehaviour:
   - m_Rig: {fileID: 4866017679068758375}
     m_Active: 1
   m_Effectors: []
---- !u!114 &7522273441451323919
+--- !u!114 &1782649079864666077
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -4772,101 +4804,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 8360320114564844481}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b2d8418b0b9634b1892b0268dd9c2743, type: 3}
+  m_Script: {fileID: 11500000, guid: 937507440d9405740bcf1f7e6c6306d3, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Unity.Animation.Rigging::UnityEngine.Animations.Rigging.BoneRenderer
-  boneShape: 1
-  drawBones: 1
-  drawTripods: 0
-  boneSize: 1
-  tripodSize: 1
-  boneColor: {r: 0, g: 0, b: 1, a: 0.5}
-  m_Transforms:
-  - {fileID: 8972999359828778191}
-  - {fileID: 7812433283044894591}
-  - {fileID: 8996843691592621320}
-  - {fileID: 6012789873600645338}
-  - {fileID: 8268245174982160566}
-  - {fileID: 8441660360468954563}
-  - {fileID: 6694964477325681430}
-  - {fileID: 4496413685195624596}
-  - {fileID: 8538072120519957812}
-  - {fileID: 457436759389736611}
-  - {fileID: 2107651091337423452}
-  - {fileID: 1090270760003807754}
-  - {fileID: 2641806297934055003}
-  - {fileID: 6797992128537251290}
-  - {fileID: 3053089116090702379}
-  - {fileID: 5054031546536873489}
-  - {fileID: 695836907039808570}
-  - {fileID: 8366614323230777101}
-  - {fileID: 3177366300067259959}
-  - {fileID: 8239421844950571798}
-  - {fileID: 3053295777128035692}
-  - {fileID: 7264196699028478099}
-  - {fileID: 2841240803566299136}
-  - {fileID: 7143025206089823722}
-  - {fileID: 5131591945001741250}
-  - {fileID: 2927046792187415966}
-  - {fileID: 6240587848883524494}
-  - {fileID: 8291491425928072673}
-  - {fileID: 6129780974778583494}
-  - {fileID: 608251104263594016}
-  - {fileID: 1785664510946728320}
-  - {fileID: 580749702452232481}
-  - {fileID: 2743607816634592919}
-  - {fileID: 7125636276274443096}
-  - {fileID: 7806371579367974779}
-  - {fileID: 1847725121402797422}
-  - {fileID: 6618766182741031311}
-  - {fileID: 1621666369087611147}
-  - {fileID: 7461042740378071097}
-  - {fileID: 7761758615147597042}
-  - {fileID: 4038327715848850364}
-  - {fileID: 9040083200062731395}
-  - {fileID: 2284657911648129840}
-  - {fileID: 2801391056108968780}
-  - {fileID: 8350798626724074990}
-  - {fileID: 8002279143203012226}
-  - {fileID: 8033887458957279528}
-  - {fileID: 2626458687867271014}
-  - {fileID: 2015114266619098}
-  - {fileID: 125678076638176288}
-  - {fileID: 368172765427126681}
-  - {fileID: 1318549707214007042}
-  - {fileID: 2765768336807188746}
-  - {fileID: 6679860206849142130}
-  - {fileID: 8556559418534620286}
-  - {fileID: 8066643724219399650}
-  - {fileID: 3043930191698696901}
-  - {fileID: 1741598300022330878}
-  - {fileID: 3478007208970908758}
-  - {fileID: 2290225989620514514}
-  - {fileID: 7183289198970167316}
-  - {fileID: 4660602996427466559}
-  - {fileID: 7873638242049706222}
-  - {fileID: 7179547353705689664}
-  - {fileID: 8151142960850484448}
-  - {fileID: 4895778386014361649}
-  - {fileID: 9135910922944260946}
-  - {fileID: 4066824431528950342}
-  - {fileID: 8579886245994366362}
-  - {fileID: 7448158951771267653}
-  - {fileID: 1254389538805185112}
-  - {fileID: 4631217579354710030}
-  - {fileID: 4603803664985492056}
-  - {fileID: 7831946517409747656}
-  - {fileID: 2792270938179551410}
-  - {fileID: 2808315093159542611}
-  - {fileID: 1571142189927222703}
-  - {fileID: 7869776760087325319}
-  - {fileID: 193897657777042997}
-  - {fileID: 1758269049259392425}
-  - {fileID: 1303929597973084309}
-  - {fileID: 2689012356893267936}
-  - {fileID: 4593469311880008085}
-  - {fileID: 8311501311429075637}
-  - {fileID: 3275384125890856740}
+  m_EditorClassIdentifier: Assembly-CSharp::AnimationEvents
 --- !u!1 &8440625815123085474
 GameObject:
   m_ObjectHideFlags: 0
@@ -5166,11 +5106,11 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 3.5
-  m_Acceleration: 8
+  m_Speed: 10
+  m_Acceleration: 100
   avoidancePriority: 50
-  m_AngularSpeed: 120
-  m_StoppingDistance: 3
+  m_AngularSpeed: 500
+  m_StoppingDistance: 4
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -5191,7 +5131,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WillTheFreeBehaviour
   moans: []
-  state: 0
+  state: 2
   walkAnimVariantNames: []
   canMove: 1
   canRotate: 1
@@ -5207,3 +5147,6 @@ MonoBehaviour:
   rotationSpeed: 0
   pathFound: 0
   stoppingThreshold: 0
+  eyesPoint: {fileID: 3587990955075341089}
+  hasArrivedMaxCooldown: 5
+  range: 50
